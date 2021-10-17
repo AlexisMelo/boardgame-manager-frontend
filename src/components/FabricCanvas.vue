@@ -1,6 +1,5 @@
 <template>
   <canvas id="canvas">
-    super canvas
   </canvas>
 </template>
 
@@ -30,6 +29,7 @@ export default {
     })
 
     canvas.add(rect)
+    canvas.setActiveObject(rect)
 
     fabric.Image.fromURL(require("@/assets/monopoly-classique-plateau.jpg"), (oImg) => {
       oImg.scale(0.5)
@@ -44,7 +44,7 @@ export default {
     canvas.add(titre)
 
     canvas.on("mouse:down", (options) => {
-      if (!options.target) {
+      if (!options.target && options.e.altKey) {
         let circle = new fabric.Circle({
           left: 300,
           top: 100,
@@ -52,9 +52,11 @@ export default {
           radius: 50
         })
 
-        circle.on("selected", () => {
-          console.log("selected")
-          canvas.remove(canvas.getActiveObject())
+        circle.on("selected", (opt) => {
+          let evt = opt.e;
+          if (evt.shiftKey) {
+            canvas.remove(canvas.getActiveObject())
+          }
         })
 
         canvas.add(circle)
@@ -102,17 +104,43 @@ export default {
       canvas.selection = true;
     });
 
-    canvas.renderAll()
+    fabric.Object.prototype.controls.rotateControl = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      offsetY: -30,
+      offsetX: -10,
+      cursorStyle: "pointer",
+      mouseUpHandler: rotateObject,
+      render: renderIcon,
+      cornerSize: 24
+    })
+
+
+
+
+
 
   }
 }
-</script>
 
-<style scoped>
-#canvas {
-
+function rotateObject(eventData, transform) {
+  let target = transform.target
+  target.rotate(target.angle + 90)
 }
-</style>
+
+function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+  let rotateIcon = require("@/assets/rotating-arrow-symbol.png")
+  let img = document.createElement("img")
+  img.src = rotateIcon
+
+  let size = this.cornerSize;
+  ctx.save();
+  ctx.translate(left, top);
+  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+  ctx.drawImage(img, -size/2, -size/2, size, size);
+  ctx.restore();
+}
+</script>
 
 <style>
 .canvas-container {
