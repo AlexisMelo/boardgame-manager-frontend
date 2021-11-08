@@ -6,6 +6,9 @@
 <script>
 import {fabric} from "fabric";
 
+import {Card} from "@/gameObjects/Card";
+import {Deck} from "@/gameObjects/Deck";
+
 export default {
   name: "FabricCanvas",
   mounted() {
@@ -115,9 +118,60 @@ export default {
       cornerSize: 24
     })
 
+    let carte = new Card({
+      label: "1 PIQUE",
+      left: 200
+    })
+    let deck = new Deck()
+
+    canvas.add(carte)
+    canvas.add(deck)
+
+    canvas.on({
+      'object:moving': onChange,
+      'object:scaling': onChange,
+      'object:rotating': onChange
+    })
 
 
 
+
+    function onChange(options) {
+      options.target.setCoords()
+      canvas.forEachObject(function(obj) {
+        if (obj === options.target) return
+        if (options.target.type === "Card" && obj.type === "Deck") {
+          let intersects = options.target.intersectsWithObject(obj)
+
+          if (intersects) {
+            console.log(`Intersection entre ${obj} et ${options.target}`)
+            console.log(options.target)
+            console.log(options.target.controls)
+            options.target.controls.addToDeckControl = new fabric.Control({
+              x: 0.5,
+              y: -0.5,
+              offsetY: -60,
+              offsetX: -20,
+              cursorStyle: "pointer",
+              mouseUpHandler: function addToDeck() {
+                console.log("ajouté au deck")
+                canvas.remove(options.target)
+                delete fabric.Object.prototype.controls.addToDeckControl
+              },
+              render: renderAddToDeckIcon,
+              cornerSize: 24
+            })
+
+            options.target.set('opacity',0.90)
+            options.target.set("fill", "green")
+          } else {
+            delete options.target.controls.addToDeckControl
+            options.target.set('opacity',1)
+            options.target.set("fill", options.target.defaultFill)
+          }
+        }
+      })
+    }
 
 
   }
@@ -140,6 +194,20 @@ function renderIcon(ctx, left, top, styleOverride, fabricObject) {
   ctx.drawImage(img, -size/2, -size/2, size, size);
   ctx.restore();
 }
+
+function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
+  let icon = require("@/assets/plus.png")
+  let img = document.createElement("img")
+  img.src = icon
+
+  let size = this.cornerSize;
+  ctx.save();
+  ctx.translate(left, top);
+  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+  ctx.drawImage(img, -size/2, -size/2, size, size);
+  ctx.restore();
+}
+
 </script>
 
 <style>
