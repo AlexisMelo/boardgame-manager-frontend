@@ -6,13 +6,27 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     width: 100,
     defaultFill: "#E4E5E5",
     fill: "#E4E5E5",
-    defaultLabel : "Carte vide",
+    defaultLabel: "Carte vide",
 
     initialize: function (options) {
         options || (options = {})
         this.callSuper("initialize", options)
         this.set("label", options.label || this.defaultLabel)
-        this.set({"height": this.height, "width": this.width, "fill": this.fill})
+        this.set({
+            "height": this.height,
+            "width": this.width,
+            "fill": this.fill
+        })
+        this.setControlsVisibility({
+            tr: false,
+            tl: false,
+            br: false,
+            bl: false,
+            ml: false,
+            mt: false,
+            mr: false,
+            mb: false
+        })
     },
 
     toObject: function () {

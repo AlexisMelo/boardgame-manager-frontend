@@ -133,10 +133,7 @@ export default {
     })
 
 
-    function addToDeck() {
-      console.log("ajouté au deck")
-      canvas.remove(canvas.getActiveObject())
-    }
+
 
     function onChange(options) {
       options.target.setCoords()
@@ -144,15 +141,23 @@ export default {
         if (obj === options.target) return
         if (options.target.type === "Card" && obj.type === "Deck") {
           let intersects = options.target.intersectsWithObject(obj)
+
           if (intersects) {
+            console.log(`Intersection entre ${obj} et ${options.target}`)
+            console.log(options.target)
+            console.log(options.target.controls)
             options.target.controls.addToDeckControl = new fabric.Control({
               x: 0.5,
               y: -0.5,
               offsetY: -60,
               offsetX: -20,
               cursorStyle: "pointer",
-              mouseUpHandler: addToDeck,
-              render: renderIcon,
+              mouseUpHandler: function addToDeck() {
+                console.log("ajouté au deck")
+                canvas.remove(options.target)
+                delete fabric.Object.prototype.controls.addToDeckControl
+              },
+              render: renderAddToDeckIcon,
               cornerSize: 24
             })
 
@@ -190,6 +195,20 @@ function renderIcon(ctx, left, top, styleOverride, fabricObject) {
   ctx.drawImage(img, -size/2, -size/2, size, size);
   ctx.restore();
 }
+
+function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
+  let icon = require("@/assets/plus.png")
+  let img = document.createElement("img")
+  img.src = icon
+
+  let size = this.cornerSize;
+  ctx.save();
+  ctx.translate(left, top);
+  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+  ctx.drawImage(img, -size/2, -size/2, size, size);
+  ctx.restore();
+}
+
 </script>
 
 <style>
