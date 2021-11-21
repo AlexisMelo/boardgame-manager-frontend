@@ -1,4 +1,5 @@
 import {fabric} from "fabric";
+import {v4 as uuidv4} from "uuid";
 
 export let Card = fabric.util.createClass(fabric.Rect, {
     type: "Card",
@@ -15,7 +16,8 @@ export let Card = fabric.util.createClass(fabric.Rect, {
         this.set({
             "height": this.height,
             "width": this.width,
-            "fill": this.fill
+            "fill": this.fill,
+            "id": uuidv4()
         })
         this.setControlsVisibility({
             tr: false,

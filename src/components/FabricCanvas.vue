@@ -32,17 +32,20 @@ export default {
     })
 
     canvas.add(rect)
-    canvas.setActiveObject(rect)
 
     fabric.Image.fromURL(require("@/assets/monopoly-classique-plateau.jpg"), (oImg) => {
-      oImg.scale(0.5)
-      canvas.add(oImg)
+      let monopolyBoard = oImg.set({
+        left: 600,
+        top: 300
+      })
+      monopolyBoard.scale(0.3)
+      canvas.add(monopolyBoard)
     })
 
     let titre = new fabric.Text("POC pour le PAO Boardgame avec fabric.js", {
       fontFamily: "Comic Sans",
-      left: 300,
-      top: 100
+      left: 400,
+      top: 30
     })
     canvas.add(titre)
 
@@ -133,7 +136,10 @@ export default {
       'object:rotating': onChange
     })
 
-
+    this.emitter.on("create_card", (card) => {
+      canvas.add(card)
+      canvas.renderAll()
+    })
 
 
     function onChange(options) {
@@ -145,8 +151,6 @@ export default {
 
           if (intersects) {
             console.log(`Intersection entre ${obj} et ${options.target}`)
-            console.log(options.target)
-            console.log(options.target.controls)
             options.target.controls.addToDeckControl = new fabric.Control({
               x: 0.5,
               y: -0.5,
@@ -154,7 +158,6 @@ export default {
               offsetX: -20,
               cursorStyle: "pointer",
               mouseUpHandler: function addToDeck() {
-                console.log("ajouté au deck")
                 canvas.remove(options.target)
                 delete fabric.Object.prototype.controls.addToDeckControl
               },
