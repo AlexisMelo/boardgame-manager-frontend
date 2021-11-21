@@ -14,10 +14,10 @@ export let Card = fabric.util.createClass(fabric.Rect, {
         this.callSuper("initialize", options)
         this.set("label", options.label || this.defaultLabel)
         this.set({
-            "height": this.height,
-            "width": this.width,
-            "fill": this.fill,
-            "id": uuidv4()
+            "height": options.height || this.height,
+            "width": options.width || this.width,
+            "fill": options.fill || this.fill,
+            "id": options.id || uuidv4()
         })
         this.setControlsVisibility({
             tr: false,

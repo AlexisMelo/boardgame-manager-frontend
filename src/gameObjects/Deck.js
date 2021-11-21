@@ -12,10 +12,11 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
         options || (options = {})
         this.callSuper("initialize", options)
         this.set("label", this.label)
-        this.set({"height": this.height,
-            "width": this.width,
-            "fill": this.fill,
-            "id": uuidv4()
+        this.set({
+            "height": options.height || this.height,
+            "width": options.width || this.width,
+            "fill": options.fill || this.fill,
+            "id": options.id || uuidv4()
         })
         this.setControlsVisibility({
             tr: false,
