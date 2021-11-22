@@ -23,8 +23,9 @@ export function initializeSocket(canvas, toastLibInstance) {
                 id: id,
                 width: obj.width,
                 height: obj.height,
-                fill: obj.fill
+                fill: obj.fill,
             })
+            object_duplicate.set({left: obj.left, top: obj.top})
         }
         if (object_duplicate) {
             canvas.add(object_duplicate)
@@ -32,7 +33,7 @@ export function initializeSocket(canvas, toastLibInstance) {
         }
 
         toastLibInstance.info(`New ${obj.type} ${obj.label ? `(${obj.label})` : ""} added`, {
-            duration: 1000
+            duration: 2000
         })
     })
 
