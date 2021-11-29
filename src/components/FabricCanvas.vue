@@ -7,7 +7,6 @@
 
 <script>
 import { fabric } from "fabric";
-import { Menu } from "@/gameObjects/Menu";
 
 import { Deck } from "@/gameObjects/Deck";
 import { initializeSocket } from "@/assets/js/socketHandler";
@@ -125,24 +124,25 @@ export default {
       this.socket.emit("object-added", { obj: card, id: card.id });
       //canvas.renderAll()
     });
+
     /* Gestion des menus */
-    canvas.on("selection:created", (e) => {
+    this.canvas.on("selection:created", (e) => {
       const object = e.selected[0];
       if (object.getMenu != undefined) {
-        object.getMenu(canvas).openMenu(true, object.left, object.top);
+        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
       }
     });
-    canvas.on("object:moving", (e) => {
+    this.canvas.on("object:moving", (e) => {
       const object = e.transform.target;
       if (object.getMenu != undefined) {
         console.log("Test ici !");
-        object.getMenu(canvas).openMenu(true, object.left, object.top);
+        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
       }
     });
-    canvas.on("selection:cleared", (e) => {
+    this.canvas.on("selection:cleared", (e) => {
       const object = e.deselected[0];
       if (object.getMenu != undefined) {
-        object.getMenu(canvas).openMenu(false);
+        object.getMenu(this.canvas).openMenu(false);
       }
     });
   },
