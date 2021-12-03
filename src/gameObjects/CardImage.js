@@ -10,11 +10,13 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
     fabric.util.loadImage(
       options.url,
       function (img) {
+        console.log("width:", img.width);
+        console.log("height:", img.height);
         that.set("image", img);
         that.imageLoaded = true;
         that.dirty = true;
-        that.width = img.width / 12;
-        that.height = img.height / 12;
+        that.width = img.width;
+        that.height = img.height;
       },
       {
         crossOrigin: "annonymous",
@@ -31,8 +33,13 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
 
   _render: function (ctx) {
     this.callSuper("_render", ctx);
-    ctx.font = "20px Helvetica";
-    ctx.fillStyle = "#333";
-    this.imageLoaded && ctx.drawImage(this.image, -15, -30, 30, 50);
+    this.imageLoaded &&
+      ctx.drawImage(
+        this.image,
+        -(this.width / 2),
+        -(this.height / 2),
+        this.width,
+        this.height
+      );
   },
 });
