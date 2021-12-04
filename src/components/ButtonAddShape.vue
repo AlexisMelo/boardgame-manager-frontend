@@ -35,10 +35,6 @@ export default {
   cursor: pointer;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .button:hover {

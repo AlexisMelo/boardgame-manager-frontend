@@ -5,7 +5,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     type: "Card",
     height: 150,
     width: 100,
-    defaultFill: "#E4E5E5",
+    defaultFill: "#e9c46a",
     fill: "#E4E5E5",
     defaultLabel: "Carte vide",
 
@@ -16,7 +16,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
         this.set({
             "height": options.height || this.height,
             "width": options.width || this.width,
-            "fill": options.fill || this.fill,
+            "fill": options.fill || this.defaultFill,
             "id": options.id || uuidv4()
         })
         this.setControlsVisibility({

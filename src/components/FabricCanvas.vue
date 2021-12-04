@@ -54,23 +54,12 @@ export default {
     );
 
     var cardImage = new CardImage({
-      url: require("@/assets/domino.png"),
+      url: require("@/assets/ace_spade.png"),
       left: 200,
       top: 150,
     });
     this.canvas.add(cardImage);
 
-    fabric.Image.fromURL(require("@/assets/domino.png"), (oImg) => {
-      let monopolyBoard = oImg.set({
-        left: 600,
-        top: 300,
-        id: "monopoly_de_depart",
-        type: "Image",
-      });
-      monopolyBoard.scale(0.3);
-      monopolyBoard.set();
-      this.canvas.add(monopolyBoard);
-    });
 
     let titre = new fabric.Text("POC pour le PAO Boardgame avec fabric.js", {
       fontFamily: "Comic Sans",
@@ -217,7 +206,7 @@ function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
 
 <style>
 .canvas-container {
-  background-color: mistyrose;
+  background-color: #caf0f8;
   position: fixed !important;
   bottom: 0;
   left: 0;

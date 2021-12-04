@@ -10,13 +10,11 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
     fabric.util.loadImage(
       options.url,
       function (img) {
-        console.log("width:", img.width);
-        console.log("height:", img.height);
         that.set("image", img);
         that.imageLoaded = true;
         that.dirty = true;
-        that.width = img.width;
-        that.height = img.height;
+        that.width = 100;
+        that.height = 150;
       },
       {
         crossOrigin: "annonymous",
