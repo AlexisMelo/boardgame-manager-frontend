@@ -1,11 +1,14 @@
 <template>
-  <div class="home">
+  <div class="game">
     <div class="navbar">
-      <img @click="backToHome()" class="home" alt="Back to home page" src="@/assets/home.png" />
-      <div class="username">{{this.username}}</div>
+      <img alt="Back to home page" class="homeButton" src="@/assets/home.png" @click="backToHome()"/>
+      <div class="username">{{ this.username }}</div>
       <ButtonAddShape/>
     </div>
-    <FabricCanvas/>
+    <FabricCanvas :socket="socket" />
+    <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
+         :title="connectionStatusText">
+    </div>
   </div>
 </template>
 
@@ -13,19 +16,71 @@
 import FabricCanvas from "@/components/FabricCanvas";
 import ButtonAddShape from "@/components/ButtonAddShape";
 import {mapState} from "vuex";
+import {io} from "socket.io-client/build/esm-debug";
 
 export default {
   name: 'Home',
   components: {ButtonAddShape, FabricCanvas},
-  computed: mapState({username: "username"}),
+  computed: {
+    ...mapState({username: "username"}),
+    connectionStatusText() {
+      if (this.socket.connected) {
+        return "Connection to the server is active"
+      }
+      return "You are disconnected from the server"
+    }
+  },
+  data() {
+    return {
+      connected: false,
+      socket: null
+    }
+  },
   created() {
     if (!this.$store.state.username) {
       this.$router.push("/")
     }
+    this.socket = this.initializeSocket();
+    this.socket.connect()
+  },
+  unmounted() {
+    this.socket.disconnect()
   },
   methods: {
     backToHome() {
       this.$router.push("/")
+    },
+    initializeSocket() {
+      let socket = io("http://0.0.0.0:3000", {
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        forceNew: true,
+        autoConnect: false
+      })
+
+      let username = this.username
+      socket.auth = { username }
+
+      socket.on("connect", () => {
+        this.$toast.success("Connexion to the server successful", {
+          duration: 2000
+        })
+      })
+
+      socket.on("disconnect", () => {
+        this.$toast.error("Disconnected from the server", {
+          duration: 2000
+        })
+      })
+
+      socket.on("connect_error", (err) => {
+        if (err.message === "invalid username") {
+          this.backToHome()
+        }
+      })
+
+      return socket
     }
   }
 }
@@ -35,13 +90,12 @@ export default {
 .navbar {
   z-index: 1;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  left: 10px;
   display: flex;
   align-items: center;
   background-color: rgba(125, 204, 206, 0.8);
   padding: 5px;
-  margin: 10px;
 }
 
 .navbar > *:not(:first-child) {
@@ -57,8 +111,37 @@ export default {
   font-weight: bold;
 }
 
-.home {
+.homeButton {
   height: 30px;
   cursor: pointer;
+}
+
+.connectionStatus {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  z-index: 1;
+  transition: box-shadow 0.3s ease;
+}
+
+.connectedStatus {
+  box-shadow: 0 0 5px 2px rgba(0, 100, 0, 0.84);
+  background-color: rgb(0, 100, 0);
+}
+
+.connectedStatus:hover {
+  box-shadow: 0 0 10px 5px rgba(0, 100, 0, 0.84);
+}
+
+.disconnectedStatus {
+  box-shadow: 0 0 5px 2px rgba(255, 0, 0, 0.84);
+  background-color: rgb(255, 0, 0);
+}
+
+.disconnectedStatus:hover {
+  box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.84);
 }
 </style>

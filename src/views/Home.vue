@@ -30,11 +30,9 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.username)
     if (this.$store.state.username) {
       this.username = this.$store.state.username
     }
-    console.log(this.$store)
   },
   methods: {
     submit() {
