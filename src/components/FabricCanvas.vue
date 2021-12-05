@@ -27,7 +27,6 @@ export default {
   },
   data() {
     return {
-      socket: null,
       canvas: null,
     };
   },
@@ -42,14 +41,10 @@ export default {
       selectionBorderColor: "rgba(255,0,0,0.5)",
     });
 
-    this.canvas = fabric_canvas;
-
     window.addEventListener("resize", () => {
       this.resizeCanvas();
     });
     this.resizeCanvas();
-
-    this.socket = initializeSocket(this.canvas, this.$toast);
 
     //ajout objets sur canvas
 
@@ -158,36 +153,33 @@ export default {
     this.canvas.on("object:modified", this.emitObjectModified);
     this.canvas.on("object:modified", this.onChange);
 
-    this.emitter.on("create_card", (card) => {
-      this.canvas.add(card);
-      this.socket.emit("object-added", { obj: card, id: card.id });
-      //canvas.renderAll()
-    });
-
     /* Gestion des menus */
     this.canvas.on("selection:created", (e) => {
       const object = e.selected[0];
-      if (object.getMenu != undefined) {
+      if (object.getMenu !== undefined) {
         object.getMenu(this.canvas).openMenu(true, object.left, object.top);
       }
     });
     this.canvas.on("object:moving", (e) => {
       const object = e.transform.target;
-      if (object.getMenu != undefined) {
-        console.log("Test ici !");
+      if (object.getMenu !== undefined) {
         object.getMenu(this.canvas).openMenu(true, object.left, object.top);
       }
     });
     this.canvas.on("selection:cleared", (e) => {
       const object = e.deselected[0];
-      if (object.getMenu != undefined) {
+      if (object.getMenu !== undefined) {
         object.getMenu(this.canvas).openMenu(false);
       }
     });
-    this.socket.emit("object-added", {
-      obj: card,
-      obj_id: card.id,
-      room: this.room,
+
+    this.emitter.on("create_card", (card) => {
+      this.canvas.add(card);
+      this.socket.emit("object-added", {
+        obj: card,
+        obj_id: card.id,
+        room: this.room,
+      });
     });
 
     this.socket.emit("init-objects", {room: this.room})
@@ -289,8 +281,6 @@ export default {
       }
     },
     updateObject(objectToUpdate) {
-      console.log("Reçu new-modification");
-
       // check the objects on our canvas for one with a matching id
       this.canvas.getObjects().forEach((object) => {
         if (object.id === objectToUpdate.id) {

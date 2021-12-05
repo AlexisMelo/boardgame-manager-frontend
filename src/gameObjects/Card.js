@@ -38,17 +38,14 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     getMenu: function (canvas) {
         return new Menu([
             new MenuItem("Rotate 180", () => {
-                console.log("Rotate 180");
                 this.rotate(this.angle + 180)
                 canvas.requestRenderAll();
             }),
             new MenuItem("Rotate 90", () => {
-                console.log("Rotate 90");
                 this.rotate(this.angle + 90)
                 canvas.requestRenderAll();
             }),
             new MenuItem("Rote -90", () => {
-                console.log("Rotate -90");
                 this.rotate(-90)
                 canvas.requestRenderAll();
             }),
