@@ -10,9 +10,22 @@ import { fabric } from "fabric";
 
 import { Deck } from "@/gameObjects/Deck";
 import { initializeSocket } from "@/assets/js/socketHandler";
+import { CardImage } from "@/gameObjects/CardImage";
+import { Card } from "@/gameObjects/Card";
+import { Dice } from "@/gameObjects/Dice";
 
 export default {
   name: "FabricCanvas",
+  props: {
+    socket: {
+      type: Object,
+      required: true,
+    },
+    room: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       socket: null,
@@ -21,7 +34,7 @@ export default {
   },
   mounted() {
     //Initializing canvas
-    let fabric_canvas = new fabric.Canvas("canvas", {
+    this.canvas = new fabric.Canvas("canvas", {
       selectionColor: "rgba(255,0,0,0.2)",
       selectionLineWidth: 5,
       selectionBorderColor: "rgba(255,0,0,0.5)",
@@ -52,6 +65,31 @@ export default {
         this.canvas.add(monopolyBoard);
       }
     );
+
+    fabric.Image.fromURL(require("@/assets/voiture.png"), (oImg) => {
+      let voiture = oImg.set({
+        left: 300,
+        top: 300,
+        id: "voiture",
+        type: "Image",
+      });
+      //monopolyBoard.set();
+      this.canvas.add(voiture);
+    });
+
+    var cardImage = new CardImage({
+      url: require("@/assets/ace_spade.png"),
+      left: 200,
+      top: 150,
+    });
+    this.canvas.add(cardImage);
+
+    var dice = new Dice({
+      left: 500,
+      top: 150,
+      max: 12,
+    });
+    this.canvas.add(dice);
 
     let titre = new fabric.Text("POC pour le PAO Boardgame avec fabric.js", {
       fontFamily: "Comic Sans",
@@ -145,8 +183,73 @@ export default {
         object.getMenu(this.canvas).openMenu(false);
       }
     });
+    this.socket.emit("object-added", {
+      obj: card,
+      obj_id: card.id,
+      room: this.room,
+    });
+  },
+  created() {
+    this.extendSocket();
   },
   methods: {
+    extendSocket() {
+      this.socket.off("new-add");
+      this.socket.off("new-modification");
+
+      this.socket.on("new-add", (data) => {
+        console.log("Reçu new-add");
+        // we'll pull out the object and id from the data object the socket emitted
+        const { obj, obj_id } = data;
+
+        let object_duplicate;
+        // check the type of the obj we received and create an object of that type
+        if (obj.type === "Card") {
+          object_duplicate = new Card({
+            label: obj.label,
+            id: obj_id,
+            width: obj.width,
+            height: obj.height,
+            fill: obj.fill,
+          });
+          object_duplicate.set({ left: obj.left, top: obj.top });
+        }
+        if (object_duplicate) {
+          this.canvas.add(object_duplicate);
+          this.canvas.renderAll();
+          this.$toast.info(
+            `New ${obj.type} ${obj.label ? `(${obj.label})` : ""} added`,
+            {
+              duration: 2000,
+            }
+          );
+        }
+      });
+
+      this.socket.on("new-modification", (data) => {
+        console.log("Reçu new-modification");
+
+        const { obj, obj_id } = data;
+
+        // check the objects on our canvas for one with a matching id
+        this.canvas.getObjects().forEach((object) => {
+          if (object.id === obj_id) {
+            // set the object on the canvas to the object we received from the socket server
+            object.animate(
+              { left: obj.left, top: obj.top },
+              {
+                duration: 500,
+                onChange: this.canvas.renderAll.bind(this.canvas),
+              }
+            );
+            // calling setCoords ensures that the canvas recognizes the object in its new position
+            object.set(obj);
+            object.setCoords();
+            this.canvas.renderAll();
+          }
+        });
+      });
+    },
     resizeCanvas() {
       let width = window.innerWidth > 0 ? window.innerWidth : screen.width;
       let height = window.innerHeight > 0 ? window.innerHeight : screen.height;
@@ -158,15 +261,14 @@ export default {
     },
     emitObjectModified(options) {
       if (options.target) {
-        const modifiedObj = {
+        this.socket.emit("object-modified", {
           obj: options.target,
-          id: options.target.id,
-        };
-        this.socket.emit("object-modified", modifiedObj);
+          obj_id: options.target.id,
+          room: this.room,
+        });
       }
     },
     onChange(options, canvas) {
-      console.log("Object changed");
       options.target.setCoords();
       this.canvas.forEachObject(function (obj) {
         if (obj === options.target) return;
@@ -174,7 +276,6 @@ export default {
           let intersects = options.target.intersectsWithObject(obj);
 
           if (intersects) {
-            console.log(`Intersection entre ${obj} et ${options.target}`);
             options.target.controls.addToDeckControl = new fabric.Control({
               x: 0.5,
               y: -0.5,
@@ -218,7 +319,7 @@ function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
 
 <style>
 .canvas-container {
-  background-color: mistyrose;
+  background-color: #caf0f8;
   position: fixed !important;
   bottom: 0;
   left: 0;
