@@ -8,6 +8,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     defaultFill: "#e9c46a",
     fill: "#E4E5E5",
     defaultLabel: "Carte vide",
+    id: null,
 
     initialize: function (options) {
         options || (options = {})
