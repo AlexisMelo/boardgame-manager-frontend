@@ -6,7 +6,8 @@ export let Dice = fabric.util.createClass(fabric.Rect, {
   initialize: function (options) {
     options || (options = {});
     this.callSuper("initialize", options);
-    this.max = options.max;
+    this.max = options.max | 6;
+    this.min = options.min | 1;
     this.width = 70;
     this.height = 70;
     this.fill = "white";
