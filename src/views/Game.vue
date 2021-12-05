@@ -5,7 +5,7 @@
       <div class="username">{{ this.username }}</div>
       <ButtonAddShape/>
     </div>
-    <FabricCanvas :socket="socket" />
+    <FabricCanvas :socket="socket" :room="room"/>
     <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
          :title="connectionStatusText">
     </div>
@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       connected: false,
-      socket: null
+      socket: null,
+      room: this.$route.params.room_id
     }
   },
   created() {
@@ -55,12 +56,15 @@ export default {
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
+        autoConnect: false,
         forceNew: true,
-        autoConnect: false
+        query: {
+          destinationRoom: this.room
+        },
+        auth: {
+          username: this.username
+        }
       })
-
-      let username = this.username
-      socket.auth = { username }
 
       socket.on("connect", () => {
         this.$toast.success("Connexion to the server successful", {
@@ -78,6 +82,18 @@ export default {
         if (err.message === "invalid username") {
           this.backToHome()
         }
+      })
+
+      socket.on("socket_disconnecting", (data) => {
+        this.$toast.warning(`${data.username} left the game`, {
+          duration: 2000
+        })
+      })
+
+      socket.on("socket_connecting", (data) => {
+        this.$toast.info(`${data.username} joined the game`, {
+          duration: 2000
+        })
       })
 
       return socket

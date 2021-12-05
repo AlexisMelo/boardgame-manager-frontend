@@ -17,6 +17,10 @@ export default {
     socket: {
       type: Object,
       required: true
+    },
+    room: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -26,13 +30,11 @@ export default {
   },
   mounted() {
     //Initializing canvas
-    let fabric_canvas = new fabric.Canvas("canvas", {
+    this.canvas = new fabric.Canvas("canvas", {
       selectionColor: "rgba(255,0,0,0.2)",
       selectionLineWidth: 5,
       selectionBorderColor: "rgba(255,0,0,0.5)",
     });
-
-    this.canvas = fabric_canvas;
 
     window.addEventListener("resize", () => {
       this.resizeCanvas();
@@ -132,8 +134,7 @@ export default {
 
     this.emitter.on("create_card", (card) => {
       this.canvas.add(card);
-      this.socket.emit("object-added", {obj: card, id: card.id});
-      //canvas.renderAll()
+      this.socket.emit("object-added", {obj: card, obj_id: card.id, room: this.room});
     });
   },
   created() {
@@ -147,13 +148,14 @@ export default {
       this.socket.on('new-add', data => {
         console.log("Reçu new-add")
         // we'll pull out the object and id from the data object the socket emitted
-        const {obj, id} = data
+        const {obj, obj_id } = data
+
         let object_duplicate
         // check the type of the obj we received and create an object of that type
         if (obj.type === "Card") {
           object_duplicate = new Card({
             label: obj.label,
-            id: id,
+            id: obj_id,
             width: obj.width,
             height: obj.height,
             fill: obj.fill,
@@ -173,10 +175,11 @@ export default {
       this.socket.on('new-modification', data => {
         console.log("Reçu new-modification")
 
-        const {obj, id} = data
+        const {obj, obj_id } = data
+
         // check the objects on our canvas for one with a matching id
         this.canvas.getObjects().forEach(object => {
-          if (object.id === id) {
+          if (object.id === obj_id) {
             // set the object on the canvas to the object we received from the socket server
             object.animate({left: obj.left, top: obj.top}, {
               duration: 500,
@@ -201,11 +204,7 @@ export default {
     },
     emitObjectModified(options) {
       if (options.target) {
-        const modifiedObj = {
-          obj: options.target,
-          id: options.target.id,
-        };
-        this.socket.emit("object-modified", modifiedObj);
+        this.socket.emit("object-modified", {obj: options.target, obj_id: options.target.id, room: this.room});
       }
     },
     onChange(options, canvas) {
