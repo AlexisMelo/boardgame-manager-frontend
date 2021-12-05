@@ -1,6 +1,6 @@
 <template>
   <div class="container" @click="togglePlayersVisibility()">
-    <div class="numberOfPlayers"> {{ players.length }} / ?</div>
+    <div class="numberOfPlayers"> {{ players.length }} Players</div>
     <div v-if="playerListVisible" class="playersList">
       <div v-for="player in this.players" :key="player" class="player">
         {{ player }}
@@ -17,30 +17,39 @@ export default {
     socket: {
       type: Object,
       required: true
+    },
+    room: {
+      type: String,
+      required: true,
     }
   },
   data() {
     return {
-      players: [this.$store.state.username],
+      players: new Set(),
       playerListVisible: false
     }
   },
   created() {
     this.extendSocket();
   },
+  mounted() {
+    this.players.add(this.$store.state.username)
+    this.socket.emit("init-players", {room: this.room})
+  },
   methods: {
     extendSocket() {
       this.socket.on("socket_disconnecting", (data) => {
-        for (let i = 0; i < this.players.length; i++) {
-          if (this.players[i] === data.username) {
-            this.players.splice(i, 1)
-            break
-          }
-        }
+        this.players.delete(data)
       })
 
       this.socket.on("socket_connecting", (data) => {
-        this.players.push(data.username)
+        this.players.add(data)
+      })
+
+      this.socket.on("init-players", (players) => {
+        for (const player of players) {
+          this.players.add(player)
+        }
       })
     },
     togglePlayersVisibility() {
@@ -62,7 +71,7 @@ export default {
 
 .numberOfPlayers:hover {
   cursor: pointer;
-  text-shadow: 0 0 4px rgba(0, 0, 200, 0.90);
+  text-shadow: 1px 1px 2px rgba(0, 0, 200, 0.90);
 }
 
 .playersList {
