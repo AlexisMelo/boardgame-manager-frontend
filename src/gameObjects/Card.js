@@ -1,5 +1,7 @@
-import {fabric} from "fabric";
-import {v4 as uuidv4} from "uuid";
+import { fabric } from "fabric";
+import { v4 as uuidv4 } from "uuid";
+import { Menu } from "@/gameObjects/Menu";
+import { MenuItem } from "@/gameObjects/MenuItem";
 
 export let Card = fabric.util.createClass(fabric.Rect, {
     type: "Card",
@@ -30,6 +32,27 @@ export let Card = fabric.util.createClass(fabric.Rect, {
             mr: false,
             mb: false
         })
+    },
+
+
+    getMenu: function (canvas) {
+        return new Menu([
+            new MenuItem("Rotate 180", () => {
+                console.log("Rotate 180");
+                this.rotate(this.angle + 180)
+                canvas.requestRenderAll();
+            }),
+            new MenuItem("Rotate 90", () => {
+                console.log("Rotate 90");
+                this.rotate(this.angle + 90)
+                canvas.requestRenderAll();
+            }),
+            new MenuItem("Rote -90", () => {
+                console.log("Rotate -90");
+                this.rotate(-90)
+                canvas.requestRenderAll();
+            }),
+        ]);
     },
 
     toObject: function () {
