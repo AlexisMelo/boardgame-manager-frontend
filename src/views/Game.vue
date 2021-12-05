@@ -6,8 +6,11 @@
       <ButtonAddShape/>
     </div>
     <FabricCanvas :socket="socket" :room="room"/>
-    <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
-         :title="connectionStatusText">
+    <div class="containerConnectionInfo">
+      <PlayersList :socket="socket"/>
+      <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
+           :title="connectionStatusText">
+      </div>
     </div>
   </div>
 </template>
@@ -17,10 +20,11 @@ import FabricCanvas from "@/components/FabricCanvas";
 import ButtonAddShape from "@/components/ButtonAddShape";
 import {mapState} from "vuex";
 import {io} from "socket.io-client/build/esm-debug";
+import PlayersList from "@/components/PlayersList";
 
 export default {
   name: 'Home',
-  components: {ButtonAddShape, FabricCanvas},
+  components: {ButtonAddShape, FabricCanvas, PlayersList},
   computed: {
     ...mapState({username: "username"}),
     connectionStatusText() {
@@ -133,13 +137,9 @@ export default {
 }
 
 .connectionStatus {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  z-index: 1;
   transition: box-shadow 0.3s ease;
 }
 
@@ -159,5 +159,20 @@ export default {
 
 .disconnectedStatus:hover {
   box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.84);
+}
+
+.containerConnectionInfo {
+  z-index: 1;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: rgba(125, 204, 206, 0.8);
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.containerConnectionInfo > *:first-child {
+  margin-right: 10px;
 }
 </style>
