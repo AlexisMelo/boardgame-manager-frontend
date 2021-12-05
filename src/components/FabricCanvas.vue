@@ -256,14 +256,7 @@ export default {
       let object_duplicate;
       // check the type of the obj we received and create an object of that type
       if (objectToAdd.type === "Card") {
-        object_duplicate = new Card({
-          label: objectToAdd.label,
-          id: objectToAdd.id,
-          width: objectToAdd.width,
-          height: objectToAdd.height,
-          fill: objectToAdd.fill,
-        });
-        object_duplicate.set({left: objectToAdd.left, top: objectToAdd.top});
+        object_duplicate = new Card(objectToAdd);
       }
       if (object_duplicate) {
         this.canvas.add(object_duplicate);
@@ -277,7 +270,6 @@ export default {
               }
           );
         }
-
       }
     },
     updateObject(objectToUpdate) {

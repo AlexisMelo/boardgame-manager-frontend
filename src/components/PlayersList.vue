@@ -1,6 +1,6 @@
 <template>
   <div class="container" @click="togglePlayersVisibility()">
-    <div class="numberOfPlayers"> {{ players.length }} Players</div>
+    <div class="numberOfPlayers"> {{ players.size }} Player{{players.size > 1 ? "s": ""}}</div>
     <div v-if="playerListVisible" class="playersList">
       <div v-for="player in this.players" :key="player" class="player">
         {{ player }}
