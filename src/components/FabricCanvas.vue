@@ -9,7 +9,6 @@
 import { fabric } from "fabric";
 
 import { Deck } from "@/gameObjects/Deck";
-import { initializeSocket } from "@/assets/js/socketHandler";
 import { CardImage } from "@/gameObjects/CardImage";
 import { Card } from "@/gameObjects/Card";
 import { Dice } from "@/gameObjects/Dice";
@@ -28,7 +27,6 @@ export default {
   },
   data() {
     return {
-      socket: null,
       canvas: null,
     };
   },
@@ -40,14 +38,10 @@ export default {
       selectionBorderColor: "rgba(255,0,0,0.5)",
     });
 
-    this.canvas = fabric_canvas;
-
     window.addEventListener("resize", () => {
       this.resizeCanvas();
     });
     this.resizeCanvas();
-
-    this.socket = initializeSocket(this.canvas, this.$toast);
 
     //ajout objets sur canvas
 
@@ -183,10 +177,13 @@ export default {
         object.getMenu(this.canvas).openMenu(false);
       }
     });
-    this.socket.emit("object-added", {
-      obj: card,
-      obj_id: card.id,
-      room: this.room,
+    this.emitter.on("create_card", (card) => {
+      this.canvas.add(card);
+      this.socket.emit("object-added", {
+        obj: card,
+        obj_id: card.id,
+        room: this.room,
+      });
     });
   },
   created() {
