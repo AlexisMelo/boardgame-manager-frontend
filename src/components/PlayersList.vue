@@ -1,6 +1,6 @@
 <template>
   <div class="container" @click="togglePlayersVisibility()">
-    <div class="numberOfPlayers"> {{ players.size }} Player{{players.size > 1 ? "s": ""}}</div>
+    <div class="numberOfPlayers"> {{this.numberOfPlayersText}} </div>
     <div v-if="playerListVisible" class="playersList">
       <div v-for="player in this.players" :key="player" class="player">
         {{ player }}
@@ -35,6 +35,14 @@ export default {
   mounted() {
     this.players.add(this.$store.state.username)
     this.socket.emit("init-players", {room: this.room})
+  },
+  computed: {
+    numberOfPlayersText() {
+      if (this.socket.connected) {
+        return `${this.players.size} Player${this.players.size > 1 ? "s": ""}`
+      }
+      return "?"
+    }
   },
   methods: {
     extendSocket() {
