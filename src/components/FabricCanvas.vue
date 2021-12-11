@@ -11,7 +11,7 @@ import { fabric } from "fabric";
 import { Deck } from "@/gameObjects/Deck";
 import { CardImage } from "@/gameObjects/CardImage";
 import { Card } from "@/gameObjects/Card";
-import { Dice } from "@/gameObjects/Dice";
+import { DiceNumber } from "@/gameObjects/DiceNumber";
 
 export default {
   name: "FabricCanvas",
@@ -82,10 +82,9 @@ export default {
     });
     this.canvas.add(cardImage);
 
-    var dice = new Dice({
+    var dice = new DiceNumber({
       left: 500,
       top: 150,
-      max: 12,
     });
     this.canvas.add(dice);
 
@@ -213,7 +212,7 @@ export default {
 
       this.socket.on("init-objects", (data) => {
         for (const obj of data) {
-          this.addObject(obj)
+          this.addObject(obj);
         }
       });
     },

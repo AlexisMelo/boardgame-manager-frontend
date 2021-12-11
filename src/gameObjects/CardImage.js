@@ -12,6 +12,7 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
     this.imageRecto = options.urlRecto;
     this.imageVerso = options.urlVerso;
     this.currentImage = this.imageRecto;
+    this.dirty = true;
     this.set("height", 150);
     fabric.util.loadImage(
       this.currentImage,
@@ -31,6 +32,7 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
 
   onDoubleClick: function (canvas) {
     this.return();
+    this.dirty = true;
     canvas.requestRenderAll();
   },
 
@@ -43,20 +45,8 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
   return: function () {
     if (this.currentImage === this.urlRecto) this.currentImage = this.urlVerso;
     else this.currentImage = this.urlRecto;
-    console.log("image:", this.currentImage);
-    fabric.util.loadImage(
-      this.currentImage,
-      function (img) {
-        this.image = img;
-        this.imageLoaded = true;
-        this.dirty = true;
-        this.width = 100;
-        this.height = 150;
-      },
-      {
-        crossOrigin: "annonymous",
-      }
-    );
+    this.image.src = this.currentImage;
+    this.dirty = true;
   },
 
   getMenu: function (canvas) {
@@ -65,11 +55,15 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
         this.return();
         canvas.requestRenderAll();
       }),
+      new MenuItem("Rotate 180", () => {
+        this.rotate(this.angle + 180);
+        canvas.requestRenderAll();
+      }),
       new MenuItem("Rotate 90", () => {
         this.rotate(this.angle + 90);
         canvas.requestRenderAll();
       }),
-      new MenuItem("Rote -90", () => {
+      new MenuItem("Rotate -90", () => {
         this.rotate(-90);
         canvas.requestRenderAll();
       }),
@@ -79,6 +73,7 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
   _render: function (ctx) {
     this.callSuper("_render", ctx);
     console.log("render CardImage");
+    console.log(this.image);
     this.imageLoaded &&
       ctx.drawImage(
         this.image,
