@@ -16,14 +16,15 @@ export let Dice = fabric.util.createClass(fabric.Rect, {
     this.fill = "white";
     this.stroke = "black";
     this.strokeWidth = 1;
-    this.newRandom();
+    this.number = this.newRandom()
   },
 
   getMenu: function (canvas) {
     return new Menu([
       new MenuItem("Roll the dice", () => {
-        this.newRandom();
-        canvas.requestRenderAll();
+        this.number = this.newRandom()
+        this.dirty = true
+        canvas.requestRenderAll()
       }),
       new MenuItem("Rotate 90", () => {
         this.rotate(this.angle + 90);
@@ -37,25 +38,24 @@ export let Dice = fabric.util.createClass(fabric.Rect, {
   },
 
   onDoubleClick: function (canvas) {
-    this.newRandom();
+    this.number = this.newRandom();
+    this.dirty = true
     canvas.requestRenderAll();
   },
 
   toObject: function () {
-    return fabric.util.object.extend(this.callSuper("toObject"), {});
+    return fabric.util.object.extend(this.callSuper("toObject"), {
+      number: this.get("number")
+    });
   },
 
   newRandom: function () {
-    console.log("newRandom");
-    this.nb = Math.floor(Math.random() * this.max);
-    console.log(this.nb);
-    return this;
+    return Math.floor(Math.random() * this.max);
   },
 
   _render: function (ctx) {
     this.callSuper("_render", ctx);
-    console.log("render");
     ctx.font = "40px Helvetica";
-    if (this.max >= 10) ctx.fillText(this.nb, this.nb >= 10 ? -20 : -10, 10);
+    ctx.fillText(this.number, this.number >= 10 ? -20 : -10, 10);
   },
 });
