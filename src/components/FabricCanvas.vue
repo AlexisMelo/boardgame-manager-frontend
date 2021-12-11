@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import {fabric} from "fabric";
+import { fabric } from "fabric";
 
-import {Deck} from "@/gameObjects/Deck";
-import {CardImage} from "@/gameObjects/CardImage";
-import {Card} from "@/gameObjects/Card";
-import {Dice} from "@/gameObjects/Dice";
+import { Deck } from "@/gameObjects/Deck";
+import { CardImage } from "@/gameObjects/CardImage";
+import { Card } from "@/gameObjects/Card";
+import { Dice } from "@/gameObjects/Dice";
 
 export default {
   name: "FabricCanvas",
@@ -23,7 +23,7 @@ export default {
     room: {
       type: String,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -49,18 +49,18 @@ export default {
     //ajout objets sur canvas
 
     fabric.Image.fromURL(
-        require("@/assets/monopoly-classique-plateau.jpg"),
-        (oImg) => {
-          let monopolyBoard = oImg.set({
-            left: 600,
-            top: 300,
-            id: "monopoly_de_depart",
-            type: "Image",
-          });
-          monopolyBoard.scale(0.3);
-          monopolyBoard.set();
-          this.canvas.add(monopolyBoard);
-        }
+      require("@/assets/monopoly-classique-plateau.jpg"),
+      (oImg) => {
+        let monopolyBoard = oImg.set({
+          left: 600,
+          top: 300,
+          id: "monopoly_de_depart",
+          type: "Image",
+        });
+        monopolyBoard.scale(0.3);
+        monopolyBoard.set();
+        this.canvas.add(monopolyBoard);
+      }
     );
 
     fabric.Image.fromURL(require("@/assets/voiture.png"), (oImg) => {
@@ -75,7 +75,8 @@ export default {
     });
 
     var cardImage = new CardImage({
-      url: require("@/assets/ace_spade.png"),
+      urlRecto: require("@/assets/ace_spade.png"),
+      urlVerso: require("@/assets/verso.png"),
       left: 200,
       top: 150,
     });
@@ -112,7 +113,7 @@ export default {
       zoom *= 0.999 ** delta;
       if (zoom > 20) zoom = 20;
       if (zoom < 0.01) zoom = 0.01;
-      this.canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+      this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -153,6 +154,18 @@ export default {
     this.canvas.on("object:modified", this.emitObjectModified);
     this.canvas.on("object:modified", this.onChange);
 
+    //event doubleclick pour le dé
+    this.canvas.on("mouse:dblclick", (e) => {
+      console.log(e.target);
+      const object = e.target;
+      console.log(object);
+      if (object.onDoubleClick !== undefined) {
+        console.log("true");
+        object.onDoubleClick(this.canvas);
+        this.canvas.renderAll();
+      }
+    });
+
     /* Gestion des menus */
     this.canvas.on("selection:created", (e) => {
       const object = e.selected[0];
@@ -182,27 +195,27 @@ export default {
       });
     });
 
-    this.socket.emit("init-objects", {room: this.room})
+    this.socket.emit("init-objects", { room: this.room });
   },
   methods: {
     extendSocket() {
       this.socket.off("new-add");
       this.socket.off("new-modification");
-      this.socket.off("init-objects")
+      this.socket.off("init-objects");
 
       this.socket.on("new-add", (data) => {
-        this.addObject(data)
+        this.addObject(data);
       });
 
       this.socket.on("new-modification", (data) => {
-        this.updateObject(data)
+        this.updateObject(data);
       });
 
       this.socket.on("init-objects", (data) => {
         for (const obj of data) {
-          this.addObject(obj, false)
+          this.addObject(obj, false);
         }
-      })
+      });
     },
     resizeCanvas() {
       let width = window.innerWidth > 0 ? window.innerWidth : screen.width;
@@ -264,10 +277,12 @@ export default {
 
         if (verbose) {
           this.$toast.info(
-              `New ${objectToAdd.type} ${objectToAdd.label ? `(${objectToAdd.label})` : ""} added`,
-              {
-                duration: 2000,
-              }
+            `New ${objectToAdd.type} ${
+              objectToAdd.label ? `(${objectToAdd.label})` : ""
+            } added`,
+            {
+              duration: 2000,
+            }
           );
         }
       }
@@ -278,11 +293,11 @@ export default {
         if (object.id === objectToUpdate.id) {
           // set the object on the canvas to the object we received from the socket server
           object.animate(
-              {left: objectToUpdate.left, top: objectToUpdate.top},
-              {
-                duration: 500,
-                onChange: this.canvas.renderAll.bind(this.canvas),
-              }
+            { left: objectToUpdate.left, top: objectToUpdate.top },
+            {
+              duration: 500,
+              onChange: this.canvas.renderAll.bind(this.canvas),
+            }
           );
           // calling setCoords ensures that the canvas recognizes the object in its new position
           object.set(objectToUpdate);
@@ -290,7 +305,7 @@ export default {
           this.canvas.renderAll();
         }
       });
-    }
+    },
   },
 };
 
