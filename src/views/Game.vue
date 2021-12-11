@@ -12,6 +12,9 @@
            :title="connectionStatusText">
       </div>
     </div>
+    <div class="containerLogs">
+      <Logs :socket="socket" />
+    </div>
   </div>
 </template>
 
@@ -21,10 +24,11 @@ import ButtonAddShape from "@/components/ButtonAddShape";
 import {mapState} from "vuex";
 import {io} from "socket.io-client/build/esm-debug";
 import PlayersList from "@/components/PlayersList";
+import Logs from "@/components/Logs";
 
 export default {
   name: 'Home',
-  components: {ButtonAddShape, FabricCanvas, PlayersList},
+  components: {ButtonAddShape, FabricCanvas, PlayersList, Logs},
   computed: {
     ...mapState({username: "username"}),
     connectionStatusText() {
@@ -174,5 +178,16 @@ export default {
 
 .containerConnectionInfo > *:first-child {
   margin-right: 10px;
+}
+
+.containerLogs {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 1;
+  height: 30vh;
+  width: 20vw;
+  padding: 5px;
+  background-color: rgba(125, 204, 206, 0.8);
 }
 </style>

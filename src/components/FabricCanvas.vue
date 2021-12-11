@@ -200,7 +200,7 @@ export default {
 
       this.socket.on("init-objects", (data) => {
         for (const obj of data) {
-          this.addObject(obj, false)
+          this.addObject(obj)
         }
       })
     },
@@ -251,7 +251,7 @@ export default {
         }
       });
     },
-    addObject(objectToAdd, verbose = true) {
+    addObject(objectToAdd) {
       // we'll pull out the object and id from the data object the socket emitted
       let object_duplicate;
       // check the type of the obj we received and create an object of that type
@@ -261,15 +261,6 @@ export default {
       if (object_duplicate) {
         this.canvas.add(object_duplicate);
         this.canvas.renderAll();
-
-        if (verbose) {
-          this.$toast.info(
-              `New ${objectToAdd.type} ${objectToAdd.label ? `(${objectToAdd.label})` : ""} added`,
-              {
-                duration: 2000,
-              }
-          );
-        }
       }
     },
     updateObject(objectToUpdate) {
