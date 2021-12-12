@@ -12,6 +12,7 @@ import { Deck } from "@/gameObjects/Deck";
 import { CardImage } from "@/gameObjects/CardImage";
 import { Card } from "@/gameObjects/Card";
 import { DiceNumber } from "@/gameObjects/DiceNumber";
+import { DiceImage } from "@/gameObjects/DiceImage";
 
 export default {
   name: "FabricCanvas",
@@ -87,6 +88,18 @@ export default {
       top: 150,
     });
     this.canvas.add(dice);
+
+    var diceImage = new DiceImage({
+      left: 600,
+      top: 150,
+      listFace: [
+        require("@/assets/rouge.png"),
+        require("@/assets/vert.png"),
+        require("@/assets/jaune.png"),
+        require("@/assets/bleu.png"),
+      ],
+    });
+    this.canvas.add(diceImage);
 
     let titre = new fabric.Text("POC pour le PAO Boardgame avec fabric.js", {
       fontFamily: "Comic Sans",
