@@ -54,20 +54,20 @@ export default {
     /* Gestion des menus */
     this.canvas.on("selection:created", (e) => {
       const object = e.selected[0];
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+      if (object.onSelectionCreated !== undefined) {
+        object.getOnSelectionCreated(this.canvas);
       }
     });
     this.canvas.on("object:moving", (e) => {
       const object = e.transform.target;
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+      if (object.onMoving !== undefined) {
+        object.onMoving(this.canvas);
       }
     });
     this.canvas.on("selection:cleared", (e) => {
       const object = e.deselected[0];
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(false);
+      if (object.onSelectionCleared !== undefined) {
+        object.onSelectionCleared(this.canvas);
       }
     });
 

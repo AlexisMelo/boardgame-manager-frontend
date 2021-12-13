@@ -7,6 +7,10 @@ export const Menu = class {
         this.y = 0;
     }
 
+    add(menuItem) {
+        this.menuItemArray.append(menuItem)
+    }
+
     style() {
         const normalOffSetY = -100
         const secondaryOffSetY = 100
