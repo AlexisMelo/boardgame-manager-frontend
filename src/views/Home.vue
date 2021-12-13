@@ -7,12 +7,12 @@
       <label for="username">
         Username
       </label>
-      <input v-model="username" id="username" required type="text"/>
+      <input id="username" v-model="username" required type="text"/>
 
       <label for="room">Room's name</label>
-      <input v-model="room" id="room" required type="text"/>
+      <input id="room" v-model="room" required type="text"/>
 
-      <button class="buttonJoinRoom" type="submit" @click.stop.prevent="joinRoom()">
+      <button class="buttonJoinRoom" type="submit" @click.stop.prevent="joinRoom(this.room)">
         Join room
       </button>
 
@@ -20,7 +20,20 @@
         Create new room
       </button>
 
+
     </form>
+
+    <div class="label">Room list</div>
+
+    <div class="roomList" id="roomList">
+      <div v-for="room in roomList" :key="room" class="room">
+        <div class="roomName">{{ room }}</div>
+        <button class="goToRoom" @click="joinRoom(room)">Join</button>
+      </div>
+      <div v-if="roomList.length === 0" class="noRoom">
+        No room yet
+      </div>
+    </div>
   </div>
 </template>
 
@@ -30,15 +43,22 @@ export default {
   data() {
     return {
       room: "Default",
-      username: ""
+      username: "",
+      roomList: []
     }
   },
   mounted() {
     if (this.$store.state.username) {
       this.username = this.$store.state.username
     }
+    this.updateRoomList()
   },
   methods: {
+    updateRoomList() {
+      this.axios.get("http://0.0.0.0:3001/rooms").then((response) => {
+        this.roomList = response.data.rooms
+      })
+    },
     conditionsMet() {
       if (!this.username) {
         this.$toast.error("Username is required")
@@ -50,12 +70,12 @@ export default {
       }
       return true
     },
-    joinRoom() {
+    joinRoom(room) {
       if (!this.conditionsMet()) return
 
-      this.axios.get(`http://0.0.0.0:3001/room/${this.room}`).then(() => {
+      this.axios.get(`http://0.0.0.0:3001/room/${room}`).then(() => {
         this.$store.commit("setUsername", this.username)
-        this.$router.push(`/game/${this.room}`)
+        this.$router.push(`/game/${room}`)
       }).catch((error) => {
         this.$toast.error(error.response.data.message)
       })
@@ -66,7 +86,6 @@ export default {
       this.axios.get(`http://0.0.0.0:3001/room/${this.room}`).then(() => {
         this.$toast.error("Room already exists") //room existe déjà, on autorise pas la création
       }).catch(() => {
-        console.log("exist po")
         this.$store.commit("setUsername", this.username)
         this.$router.push(`/game/create/${this.room}`) //room existe pas, on commence la création
       })
@@ -75,7 +94,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 h1 {
   text-align: center;
   margin-top: 50px;
@@ -84,7 +103,6 @@ h1 {
 }
 
 input {
-  margin-bottom: 50px;
   height: 30px;
   font-size: 20px;
   text-align: center;
@@ -92,7 +110,8 @@ input {
   border-radius: 5px;
 }
 
-label {
+label, .label {
+  margin-top: 3%;
   margin-bottom: 3%;
   font-weight: bold;
   color: #4aacad;
@@ -111,7 +130,7 @@ label {
   flex-direction: column;
   margin-left: 20%;
   margin-right: 20%;
-  margin-top: 25vh;
+  margin-top: 10%;
 }
 
 .buttonValidation {
@@ -124,6 +143,9 @@ label {
   transition: width 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out;
   width: 35%;
 
+  &:not(:nth-of-type(0)) {
+    margin-top: 5%;
+  }
   &:hover {
     color: white;
     width: 37%;
@@ -143,7 +165,6 @@ label {
 
 .buttonCreateRoom {
   @extend .buttonValidation;
-  margin-top: 5%;
   color: gray;
   background-color: lightgray;
   border: 5px solid darkgray;
@@ -153,5 +174,57 @@ label {
   }
 }
 
+.roomList {
+  width: 60%;
+  margin: auto;
+  background-color: #7dccce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  flex-direction: column;
+
+  * {
+    font-size: 18px;
+  }
+
+  .room:nth-of-type(even) {
+    background-color: #a8dadc;
+  }
+
+  .room:nth-of-type(odd) {
+    background-color: white;
+  }
+
+  .room {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1%;
+    transition: width 0.2s ease-out;
+
+    .goToRoom {
+      border-radius: 5px;
+      font-weight: bold;
+      padding: 5px 20px;
+      color: #4aacad;
+      background-color: #a8dadc;
+      border: 5px solid #7dccce;
+      cursor: pointer;
+      transition: width 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out;
+
+      &:hover {
+        background-color: #7dccce;
+      }
+    }
+
+    &:hover {
+      border-left: 5px solid #7dccce;
+      border-right: 5px solid #7dccce;
+      width: 100%;
+    }
+  }
+}
 
 </style>
