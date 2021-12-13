@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div oncontextmenu="return false;">
     <canvas id="canvas"> </canvas>
     <div id="menu"></div>
   </div>
@@ -35,6 +35,9 @@ export default {
     this.canvas = new fabric.Canvas("canvas", {
       selectionColor: "rgba(255,0,0,0.2)",
       selectionLineWidth: 5,
+      stopContextMenu: true,
+      fireRightClick: true,
+      fireMiddleClick: true,
       selectionBorderColor: "rgba(255,0,0,0.5)",
     });
 
@@ -158,23 +161,32 @@ export default {
     });
 
     /* Gestion des menus */
-    this.canvas.on("selection:created", (e) => {
-      const object = e.selected[0];
-      if (object.getMenu != undefined) {
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
-      }
-    });
-    this.canvas.on("object:moving", (e) => {
-      const object = e.transform.target;
-      if (object.getMenu != undefined) {
-        console.log("Test ici !");
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
-      }
-    });
-    this.canvas.on("selection:cleared", (e) => {
-      const object = e.deselected[0];
-      if (object.getMenu != undefined) {
-        object.getMenu(this.canvas).openMenu(false);
+    // this.canvas.on("selection:created", (e) => {
+    //   const object = e.selected[0];
+    //   if (object.getMenu != undefined) {
+    //     object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+    //   }
+    // });
+
+    // this.canvas.on("object:moving", (e) => {
+    //   const object = e.transform.target;
+    //   if (object.getMenu != undefined) {
+    //     object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+    //   }
+    // });
+    // this.canvas.on("selection:cleared", (e) => {
+    //   const object = e.deselected[0];
+    //   if (object.getMenu != undefined) {
+    //     object.getMenu(this.canvas).openMenu(false);
+    //   }
+    // });
+    this.canvas.on("mouse:down", (event) => {
+      if (event.button === 3) {
+        const object = event.target;
+        if (object !== undefined) {
+          //if right click
+          object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+        }
       }
     });
     this.emitter.on("create_card", (card) => {
@@ -188,6 +200,11 @@ export default {
   },
   created() {
     this.extendSocket();
+    fabric.Object.prototype.reRender = (function () {
+      return function () {
+        if (this.canvas === undefined) this.canvas.requestRenderAll();
+      };
+    })(fabric.Object.prototype.reRender);
   },
   methods: {
     extendSocket() {

@@ -40,6 +40,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
             new MenuItem("Rotate 180", () => {
                 console.log("Rotate 180");
                 this.rotate(this.angle + 180)
+                this.reRender();
                 canvas.requestRenderAll();
             }),
             new MenuItem("Rotate 90", () => {
