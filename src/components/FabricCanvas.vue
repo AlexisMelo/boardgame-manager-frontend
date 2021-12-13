@@ -30,6 +30,9 @@ export default {
       canvas: null,
     };
   },
+  created() {
+    this.extendSocket();
+  },
   mounted() {
     //Initializing canvas
     this.canvas = new fabric.Canvas("canvas", {
@@ -147,7 +150,6 @@ export default {
       this.canvas.selection = true;
     });
 
-    //this.canvas.on("object:moving", this.emitObjectMoving)
     this.canvas.on("object:moving", this.onChange);
     this.canvas.on("object:scaling", this.onChange);
     this.canvas.on("object:rotating", this.onChange);
@@ -197,71 +199,27 @@ export default {
         room: this.room,
       });
     });
-  },
-  created() {
-    this.extendSocket();
-    fabric.Object.prototype.reRender = (function () {
-      return function () {
-        if (this.canvas === undefined) this.canvas.requestRenderAll();
-      };
-    })(fabric.Object.prototype.reRender);
+
+    this.socket.emit("init-objects", { room: this.room });
   },
   methods: {
     extendSocket() {
       this.socket.off("new-add");
       this.socket.off("new-modification");
+      this.socket.off("init-objects");
 
       this.socket.on("new-add", (data) => {
-        console.log("Reçu new-add");
-        // we'll pull out the object and id from the data object the socket emitted
-        const { obj, obj_id } = data;
-
-        let object_duplicate;
-        // check the type of the obj we received and create an object of that type
-        if (obj.type === "Card") {
-          object_duplicate = new Card({
-            label: obj.label,
-            id: obj_id,
-            width: obj.width,
-            height: obj.height,
-            fill: obj.fill,
-          });
-          object_duplicate.set({ left: obj.left, top: obj.top });
-        }
-        if (object_duplicate) {
-          this.canvas.add(object_duplicate);
-          this.canvas.renderAll();
-          this.$toast.info(
-            `New ${obj.type} ${obj.label ? `(${obj.label})` : ""} added`,
-            {
-              duration: 2000,
-            }
-          );
-        }
+        this.addObject(data);
       });
 
       this.socket.on("new-modification", (data) => {
-        console.log("Reçu new-modification");
+        this.updateObject(data);
+      });
 
-        const { obj, obj_id } = data;
-
-        // check the objects on our canvas for one with a matching id
-        this.canvas.getObjects().forEach((object) => {
-          if (object.id === obj_id) {
-            // set the object on the canvas to the object we received from the socket server
-            object.animate(
-              { left: obj.left, top: obj.top },
-              {
-                duration: 500,
-                onChange: this.canvas.renderAll.bind(this.canvas),
-              }
-            );
-            // calling setCoords ensures that the canvas recognizes the object in its new position
-            object.set(obj);
-            object.setCoords();
-            this.canvas.renderAll();
-          }
-        });
+      this.socket.on("init-objects", (data) => {
+        for (const obj of data) {
+          this.addObject(obj, false);
+        }
       });
     },
     resizeCanvas() {
@@ -269,9 +227,6 @@ export default {
       let height = window.innerHeight > 0 ? window.innerHeight : screen.height;
       this.canvas.setWidth(width);
       this.canvas.setHeight(height);
-    },
-    emitObjectMoving(options) {
-      this.emitObjectModified(options);
     },
     emitObjectModified(options) {
       if (options.target) {
@@ -311,6 +266,57 @@ export default {
             options.target.set("opacity", 1);
             options.target.set("fill", options.target.defaultFill);
           }
+        }
+      });
+    },
+    addObject(objectToAdd, verbose = true) {
+      // we'll pull out the object and id from the data object the socket emitted
+      let object_duplicate;
+      // check the type of the obj we received and create an object of that type
+      if (objectToAdd.type === "Card") {
+        object_duplicate = new Card({
+          label: objectToAdd.label,
+          id: objectToAdd.id,
+          width: objectToAdd.width,
+          height: objectToAdd.height,
+          fill: objectToAdd.fill,
+        });
+        object_duplicate.set({ left: objectToAdd.left, top: objectToAdd.top });
+      }
+      if (object_duplicate) {
+        this.canvas.add(object_duplicate);
+        this.canvas.renderAll();
+
+        if (verbose) {
+          this.$toast.info(
+            `New ${objectToAdd.type} ${
+              objectToAdd.label ? `(${objectToAdd.label})` : ""
+            } added`,
+            {
+              duration: 2000,
+            }
+          );
+        }
+      }
+    },
+    updateObject(objectToUpdate) {
+      console.log("Reçu new-modification");
+
+      // check the objects on our canvas for one with a matching id
+      this.canvas.getObjects().forEach((object) => {
+        if (object.id === objectToUpdate.id) {
+          // set the object on the canvas to the object we received from the socket server
+          object.animate(
+            { left: objectToUpdate.left, top: objectToUpdate.top },
+            {
+              duration: 500,
+              onChange: this.canvas.renderAll.bind(this.canvas),
+            }
+          );
+          // calling setCoords ensures that the canvas recognizes the object in its new position
+          object.set(objectToUpdate);
+          object.setCoords();
+          this.canvas.renderAll();
         }
       });
     },

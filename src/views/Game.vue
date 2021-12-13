@@ -5,9 +5,9 @@
       <div class="username">{{ this.username }}</div>
       <ButtonAddShape/>
     </div>
-    <FabricCanvas :socket="socket" :room="room"/>
+    <FabricCanvas :room="room" :socket="socket"/>
     <div class="containerConnectionInfo">
-      <PlayersList :socket="socket"/>
+      <PlayersList :room="room" :socket="socket"/>
       <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
            :title="connectionStatusText">
       </div>
@@ -38,7 +38,7 @@ export default {
     return {
       connected: false,
       socket: null,
-      room: this.$route.params.room_id
+      room: this.$route.params.room_id,
     }
   },
   created() {
@@ -58,8 +58,8 @@ export default {
     initializeSocket() {
       let socket = io("http://0.0.0.0:3000", {
         reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
+        reconnectionDelay: 5000,
+        reconnectionDelayMax: 10000,
         autoConnect: false,
         forceNew: true,
         query: {
@@ -89,13 +89,13 @@ export default {
       })
 
       socket.on("socket_disconnecting", (data) => {
-        this.$toast.warning(`${data.username} left the game`, {
+        this.$toast.warning(`${data} left the game`, {
           duration: 2000
         })
       })
 
       socket.on("socket_connecting", (data) => {
-        this.$toast.info(`${data.username} joined the game`, {
+        this.$toast.info(`${data} joined the game`, {
           duration: 2000
         })
       })
