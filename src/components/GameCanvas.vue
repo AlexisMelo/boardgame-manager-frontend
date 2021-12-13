@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div oncontextmenu="return false;">
     <canvas id="canvas"></canvas>
     <div id="menu"></div>
   </div>
 </template>
 
 <script>
-import {fabric} from "fabric";
+import { fabric } from "fabric";
 
-import {Card} from "@/gameObjects/Card";
-import {canvasMixin} from "@/mixins/canvasMixin";
+import { Card } from "@/gameObjects/Card";
+import { canvasMixin } from "@/mixins/canvasMixin";
 
 export default {
   name: "FabricCanvas",
@@ -34,7 +34,7 @@ export default {
   },
   mounted() {
     //Initializing canvas
-    this.canvas = this.getCanvasWithControl()
+    this.canvas = this.getCanvasWithControl();
 
     this.canvas.on("object:moving", this.onChange);
     this.canvas.on("object:scaling", this.onChange);
@@ -80,7 +80,7 @@ export default {
       });
     });
 
-    this.socket.emit("init-objects", {room: this.room});
+    this.socket.emit("init-objects", { room: this.room });
   },
   methods: {
     extendSocket() {
@@ -162,11 +162,11 @@ export default {
         if (object.id === objectToUpdate.id) {
           // set the object on the canvas to the object we received from the socket server
           object.animate(
-              {left: objectToUpdate.left, top: objectToUpdate.top},
-              {
-                duration: 500,
-                onChange: this.canvas.requestRenderAll.bind(this.canvas),
-              }
+            { left: objectToUpdate.left, top: objectToUpdate.top },
+            {
+              duration: 500,
+              onChange: this.canvas.requestRenderAll.bind(this.canvas),
+            }
           );
           // calling setCoords ensures that the canvas recognizes the object in its new position
           object.set(objectToUpdate);
