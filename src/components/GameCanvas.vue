@@ -1,20 +1,19 @@
 <template>
   <div>
-    <canvas id="canvas"> </canvas>
+    <canvas id="canvas"></canvas>
     <div id="menu"></div>
   </div>
 </template>
 
 <script>
-import { fabric } from "fabric";
+import {fabric} from "fabric";
 
-import { Deck } from "@/gameObjects/Deck";
-import { CardImage } from "@/gameObjects/CardImage";
-import { Card } from "@/gameObjects/Card";
-import { DiceNumber } from "@/gameObjects/DiceNumber";
+import {Card} from "@/gameObjects/Card";
+import {canvasMixin} from "@/mixins/canvasMixin";
 
 export default {
   name: "FabricCanvas",
+  mixins: [canvasMixin],
   props: {
     socket: {
       type: Object,
@@ -35,117 +34,7 @@ export default {
   },
   mounted() {
     //Initializing canvas
-    this.canvas = new fabric.Canvas("canvas", {
-      selectionColor: "rgba(255,0,0,0.2)",
-      selectionLineWidth: 5,
-      selectionBorderColor: "rgba(255,0,0,0.5)",
-    });
-
-    window.addEventListener("resize", () => {
-      this.resizeCanvas();
-    });
-    this.resizeCanvas();
-
-    //ajout objets sur canvas
-
-    fabric.Image.fromURL(
-      require("@/assets/monopoly-classique-plateau.jpg"),
-      (oImg) => {
-        let monopolyBoard = oImg.set({
-          left: 600,
-          top: 300,
-          id: "monopoly_de_depart",
-          type: "Image",
-        });
-        monopolyBoard.scale(0.3);
-        monopolyBoard.set();
-        this.canvas.add(monopolyBoard);
-      }
-    );
-
-    fabric.Image.fromURL(require("@/assets/voiture.png"), (oImg) => {
-      let voiture = oImg.set({
-        left: 300,
-        top: 300,
-        id: "voiture",
-        type: "Image",
-      });
-      //monopolyBoard.set();
-      this.canvas.add(voiture);
-    });
-
-    var cardImage = new CardImage({
-      urlRecto: require("@/assets/ace_spade.png"),
-      urlVerso: require("@/assets/verso.png"),
-      left: 200,
-      top: 150,
-    });
-    this.canvas.add(cardImage);
-
-    var dice = new DiceNumber({
-      left: 500,
-      top: 150,
-    });
-    this.canvas.add(dice);
-
-    let titre = new fabric.Text("POC pour le PAO Boardgame avec fabric.js", {
-      fontFamily: "Comic Sans",
-      left: 400,
-      top: 30,
-      id: "titre_de_depart",
-      type: "Text",
-    });
-    this.canvas.add(titre);
-
-    let deck = new Deck({
-      left: 30,
-      top: 100,
-      id: "deck_de_depart",
-    });
-    this.canvas.add(deck);
-
-    /* Gérer zoom etc */
-
-    this.canvas.on("mouse:wheel", (opt) => {
-      let delta = opt.e.deltaY;
-      let zoom = this.canvas.getZoom();
-      zoom *= 0.999 ** delta;
-      if (zoom > 20) zoom = 20;
-      if (zoom < 0.01) zoom = 0.01;
-      this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-      opt.e.preventDefault();
-      opt.e.stopPropagation();
-    });
-
-    this.canvas.on("mouse:down", (opt) => {
-      let evt = opt.e;
-      if (evt.ctrlKey === true) {
-        this.canvas.isDragging = true;
-        this.canvas.selection = false;
-        this.canvas.lastPosX = evt.clientX;
-        this.canvas.lastPosY = evt.clientY;
-      }
-    });
-
-    this.canvas.on("mouse:move", (opt) => {
-      if (this.canvas.isDragging) {
-        let e = opt.e;
-        let vpt = this.canvas.viewportTransform;
-        vpt[4] += e.clientX - this.canvas.lastPosX;
-        vpt[5] += e.clientY - this.canvas.lastPosY;
-        this.canvas.requestRenderAll();
-        this.canvas.lastPosX = e.clientX;
-        this.canvas.lastPosY = e.clientY;
-      }
-    });
-
-    this.canvas.on("mouse:up", () => {
-      // on mouse up we want to recalculate new interaction
-      // for all objects, so we call setViewportTransform
-      this.canvas.setViewportTransform(this.canvas.viewportTransform);
-      this.canvas.isDragging = false;
-      this.canvas.selection = true;
-    });
+    this.canvas = this.getCanvasWithControl()
 
     this.canvas.on("object:moving", this.onChange);
     this.canvas.on("object:scaling", this.onChange);
@@ -194,7 +83,7 @@ export default {
       });
     });
 
-    this.socket.emit("init-objects", { room: this.room });
+    this.socket.emit("init-objects", {room: this.room});
   },
   methods: {
     extendSocket() {
@@ -216,12 +105,7 @@ export default {
         }
       });
     },
-    resizeCanvas() {
-      let width = window.innerWidth > 0 ? window.innerWidth : screen.width;
-      let height = window.innerHeight > 0 ? window.innerHeight : screen.height;
-      this.canvas.setWidth(width);
-      this.canvas.setHeight(height);
-    },
+
     emitObjectModified(options) {
       if (options.target) {
         this.socket.emit("object-modified", {
@@ -281,11 +165,11 @@ export default {
         if (object.id === objectToUpdate.id) {
           // set the object on the canvas to the object we received from the socket server
           object.animate(
-            { left: objectToUpdate.left, top: objectToUpdate.top },
-            {
-              duration: 500,
-              onChange: this.canvas.renderAll.bind(this.canvas),
-            }
+              {left: objectToUpdate.left, top: objectToUpdate.top},
+              {
+                duration: 500,
+                onChange: this.canvas.renderAll.bind(this.canvas),
+              }
           );
           // calling setCoords ensures that the canvas recognizes the object in its new position
           object.set(objectToUpdate);

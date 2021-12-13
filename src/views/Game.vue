@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import FabricCanvas from "@/components/FabricCanvas";
+import FabricCanvas from "@/components/GameCanvas";
 import ButtonAddShape from "@/components/ButtonAddShape";
 import {mapState} from "vuex";
 import {io} from "socket.io-client/build/esm-debug";

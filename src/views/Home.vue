@@ -9,11 +9,15 @@
       </label>
       <input v-model="username" id="username" required type="text"/>
 
-      <label for="room">Room</label>
+      <label for="room">Room's name</label>
       <input v-model="room" id="room" required type="text"/>
 
-      <button class="buttonValidation" type="submit" @click.stop.prevent="submit()">
-        Join
+      <button class="buttonJoinRoom" type="submit" @click.stop.prevent="joinRoom()">
+        Join room
+      </button>
+
+      <button class="buttonCreateRoom" type="submit" @click.stop.prevent="createRoom()">
+        Create new room
       </button>
 
     </form>
@@ -35,16 +39,43 @@ export default {
     }
   },
   methods: {
-    submit() {
-      if (!this.username || !this.room) return;
-      this.$store.commit("setUsername", this.username)
-      this.$router.push(`/game/${this.room}`)
+    conditionsMet() {
+      if (!this.username) {
+        this.$toast.error("Username is required")
+        return false
+      }
+      if (!this.room) {
+        this.$toast.error("Room name is required")
+        return false
+      }
+      return true
+    },
+    joinRoom() {
+      if (!this.conditionsMet()) return
+
+      this.axios.get(`http://0.0.0.0:3001/room/${this.room}`).then(() => {
+        this.$store.commit("setUsername", this.username)
+        this.$router.push(`/game/${this.room}`)
+      }).catch((error) => {
+        this.$toast.error(error.response.data.message)
+      })
+    },
+    createRoom() {
+      if (!this.conditionsMet()) return
+
+      this.axios.get(`http://0.0.0.0:3001/room/${this.room}`).then(() => {
+        this.$toast.error("Room already exists") //room existe déjà, on autorise pas la création
+      }).catch(() => {
+        console.log("exist po")
+        this.$store.commit("setUsername", this.username)
+        this.$router.push(`/game/create/${this.room}`) //room existe pas, on commence la création
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   text-align: center;
   margin-top: 50px;
@@ -86,19 +117,38 @@ label {
 .buttonValidation {
   align-self: center;
   font-size: 20px;
-  border: 5px solid #7dccce;
-  background-color: #a8dadc;
-  color: #4aacad;
   font-weight: bold;
   cursor: pointer;
   padding: 8px 20px;
   border-radius: 5px;
   transition: padding 0.5s ease-out, background-color 0.5s ease-out, color 0.5s ease-out;
+  min-width: 30%;
+}
+.buttonJoinRoom {
+  @extend .buttonValidation;
+  color: #4aacad;
+  background-color: #a8dadc;
+  border: 5px solid #7dccce;
+
+  &:hover {
+    background-color: #7dccce;
+  }
+}
+
+.buttonCreateRoom {
+  @extend .buttonValidation;
+  margin-top: 5%;
+  color: gray;
+  background-color: lightgray;
+  border: 5px solid darkgray;
+
+  &:hover {
+    background-color: darkgray;
+  }
 }
 
 .buttonValidation:hover {
   color: white;
-  background-color: #7dccce;
   padding: 13px 25px;
 }
 </style>
