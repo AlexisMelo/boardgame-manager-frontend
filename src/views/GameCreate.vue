@@ -66,7 +66,8 @@ export default {
       this.$router.push("/")
     },
     postCreateRoom() {
-      this.axios.post("http://0.0.0.0:3001/room/create", {room_name: this.room, objects: this.canvas.getObjects()}).then(() => {
+      let objects = this.canvas.getObjects().filter(obj => (obj.id === "room_init" || obj.id === "room_init_st"))
+      this.axios.post("http://0.0.0.0:3001/room/create", {room_name: this.room, objects: objects}).then(() => {
         this.$router.push(`/game/${this.room}`)
         this.$toast.success("Room created !")
       }).catch((error) => {

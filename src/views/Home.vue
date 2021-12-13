@@ -121,9 +121,15 @@ label {
   cursor: pointer;
   padding: 8px 20px;
   border-radius: 5px;
-  transition: padding 0.5s ease-out, background-color 0.5s ease-out, color 0.5s ease-out;
-  min-width: 30%;
+  transition: width 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out;
+  width: 35%;
+
+  &:hover {
+    color: white;
+    width: 37%;
+  }
 }
+
 .buttonJoinRoom {
   @extend .buttonValidation;
   color: #4aacad;
@@ -147,8 +153,5 @@ label {
   }
 }
 
-.buttonValidation:hover {
-  color: white;
-  padding: 13px 25px;
-}
+
 </style>

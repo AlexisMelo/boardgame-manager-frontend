@@ -3,7 +3,6 @@
     <div class="navbar">
       <img alt="Back to home page" class="homeButton" src="@/assets/home.png" @click="backToHome()"/>
       <div class="username">{{ this.username }}</div>
-      <ButtonAddShape/>
     </div>
     <FabricCanvas :room="room" :socket="socket"/>
     <div class="containerConnectionInfo">
@@ -13,14 +12,13 @@
       </div>
     </div>
     <div class="containerLogs">
-      <Logs :socket="socket" />
+      <Logs :socket="socket"/>
     </div>
   </div>
 </template>
 
 <script>
 import FabricCanvas from "@/components/GameCanvas";
-import ButtonAddShape from "@/components/ButtonAddShape";
 import {mapState} from "vuex";
 import {io} from "socket.io-client/build/esm-debug";
 import PlayersList from "@/components/PlayersList";
@@ -28,7 +26,7 @@ import Logs from "@/components/Logs";
 
 export default {
   name: 'Home',
-  components: {ButtonAddShape, FabricCanvas, PlayersList, Logs},
+  components: {FabricCanvas, PlayersList, Logs},
   computed: {
     ...mapState({username: "username"}),
     connectionStatusText() {
@@ -128,6 +126,10 @@ export default {
 
 .navbar > *:first-child {
   margin-left: 10px;
+}
+
+.navbar > *:last-child {
+  margin-right: 10px;
 }
 
 .username {

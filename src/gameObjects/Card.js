@@ -10,7 +10,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     defaultFill: "#e9c46a",
     fill: "#E4E5E5",
     defaultLabel: "Carte vide",
-    id: null,
+    id: "SEXE",
 
     initialize: function (options) {
         options || (options = {})
@@ -54,7 +54,9 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
     toObject: function () {
         return fabric.util.object.extend(this.callSuper("toObject"), {
-            label: this.get("label")
+            label: this.get("label"),
+            id: this.get("id"),
+            type: this.get("type")
         })
     },
 

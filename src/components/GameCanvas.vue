@@ -44,11 +44,8 @@ export default {
 
     //event doubleclick pour le dé
     this.canvas.on("mouse:dblclick", (e) => {
-      console.log(e.target);
       const object = e.target;
-      console.log(object);
       if (object.onDoubleClick !== undefined) {
-        console.log("true");
         object.onDoubleClick(this.canvas);
         this.canvas.renderAll();
       }
@@ -168,13 +165,13 @@ export default {
               {left: objectToUpdate.left, top: objectToUpdate.top},
               {
                 duration: 500,
-                onChange: this.canvas.renderAll.bind(this.canvas),
+                onChange: this.canvas.requestRenderAll.bind(this.canvas),
               }
           );
           // calling setCoords ensures that the canvas recognizes the object in its new position
           object.set(objectToUpdate);
           object.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         }
       });
     },
