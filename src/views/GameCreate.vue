@@ -3,7 +3,13 @@
     <div class="navbar">
       <img alt="Back to home page" class="homeButton" src="@/assets/home.png" @click="backToHome()"/>
       <div class="username">{{ this.username }}</div>
-      <ButtonAddShape />
+      <button class="navButton" @click="createNewCard">Add random card</button>
+      <button class="save" @click="save">
+        Save
+      </button>
+      <button class="upload" @click="upload">
+        Upload
+      </button>
     </div>
     <canvas id="canvas"></canvas>
     <button class="startGameButton" @click="postCreateRoom">Start game with these {{ this.numberOfItems }} items</button>
@@ -14,12 +20,11 @@
 import {canvasMixin} from "@/mixins/canvasMixin";
 import {fabric} from "fabric";
 import {mapState} from "vuex";
-import ButtonAddShape from "@/components/ButtonAddShape";
+import {Card} from "@/gameObjects/Card";
 
 export default {
   name: "GameCreate",
   mixins: [canvasMixin],
-  components: {ButtonAddShape},
   data() {
     return {
       room: this.$route.params.room_id,
@@ -56,12 +61,24 @@ export default {
     });
     this.canvas.add(titre);
     this.canvas.add(subtitle);
-
-    this.emitter.on("create_card", (card) => {
-      this.canvas.add(card);
-    });
   },
   methods: {
+    save() {
+      let exportedObjects = this.canvas.getObjects().filter(obj => (!(obj.id === "room_init") & !(obj.id === "room_init_st")))
+      let save = {canvasObjects: exportedObjects}
+      let element = document.createElement("a")
+      let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(save))
+      let todayDate = ( new Date() ).toLocaleDateString()
+      element.style.display = "none"
+      element.setAttribute("href", data);
+      element.setAttribute("download", `Boardgame-Initialization-${this.room}-${todayDate}.json`)
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+    },
+    upload() {
+      alert("marche po")
+    },
     backToHome() {
       this.$router.push("/")
     },
@@ -74,12 +91,21 @@ export default {
       }).catch((error) => {
         this.$toast.error(error.response.data.message)
       })
+    },
+    createNewCard() {
+      let figures = ["As", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Valet", "Dame", "Roi"]
+      let type = ["Carreau", "Pique", "Coeur", "Trèfle"]
+      let card = new Card({
+        label: `${figures[Math.floor(Math.random() * figures.length)]} de ${type[Math.floor(Math.random() * type.length)]}`,
+        left: 200
+      })
+      this.canvas.add(card)
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .gameCreateContainer {
   margin-left: 10vw;
   margin-right: 10vw;
@@ -147,5 +173,36 @@ h1 {
 
 .startGameButton:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.navButton {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.navButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.upload {
+  @extend .navButton;
+  color: gray;
+  background-color: lightgray;
+}
+
+.save {
+  @extend .navButton;
+  color: gray;
+  background-color: lightgray;
 }
 </style>

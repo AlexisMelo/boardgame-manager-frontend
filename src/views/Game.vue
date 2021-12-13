@@ -4,7 +4,7 @@
       <img alt="Back to home page" class="homeButton" src="@/assets/home.png" @click="backToHome()"/>
       <div class="username">{{ this.username }}</div>
     </div>
-    <FabricCanvas :room="room" :socket="socket"/>
+    <GameCanvas :room="room" :socket="socket"/>
     <div class="containerConnectionInfo">
       <PlayersList :room="room" :socket="socket"/>
       <div :class="`connectionStatus ${this.socket.connected ? 'connectedStatus' : 'disconnectedStatus'}`"
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import FabricCanvas from "@/components/GameCanvas";
+import GameCanvas from "@/components/GameCanvas";
 import {mapState} from "vuex";
 import {io} from "socket.io-client/build/esm-debug";
 import PlayersList from "@/components/PlayersList";
@@ -26,7 +26,7 @@ import Logs from "@/components/Logs";
 
 export default {
   name: 'Home',
-  components: {FabricCanvas, PlayersList, Logs},
+  components: {GameCanvas, PlayersList, Logs},
   computed: {
     ...mapState({username: "username"}),
     connectionStatusText() {
