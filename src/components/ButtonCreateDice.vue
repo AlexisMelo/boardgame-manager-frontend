@@ -82,19 +82,6 @@ export default {
     openModal() {
       this.modal.style.display = "block"
     },
-    toDataURL(url, callback) {
-      let xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        let reader = new FileReader();
-        reader.onloadend = function () {
-          callback(reader.result);
-        }
-        reader.readAsDataURL(xhr.response);
-      };
-      xhr.open('GET', url);
-      xhr.responseType = 'blob';
-      xhr.send();
-    },
     createNewDice() {
       if ((this.min || this.max) && (this.max > this.min)) {
         let dice = new DiceNumber({
@@ -107,24 +94,7 @@ export default {
       }
 
       if (this.faces) {
-        let facesSrcs = []
-        for (const face of this.faces) {
-          if (face.file) {
-            this.toDataURL(face.file, function(dataUrl) {
-              console.log(dataUrl)
-            })
-          }
-        }
-
-        if (facesSrcs.length > 0) {
-          console.log("creating dice with", facesSrcs)
-          let dice = new DiceImage({
-            left: 100,
-            top: 100,
-            listFace: facesSrcs
-          })
-          this.$emit("new", dice)
-        }
+        console.log("Faut faire un truc là avec le dé mdr")
       }
 
     }

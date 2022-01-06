@@ -75,17 +75,26 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
     ]);
   },
 
+  onDeseleced: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
+
+  onMouseDown: function (canvas, e) {
+    if (e.button === 3)
+      this.getMenu(canvas).openMenu(true, this.left, this.top);
+  },
+
   _render: function (ctx) {
     let imageElement = document.createElement("img")
     imageElement.src = this.src
     imageElement.alt = this.alt
     this.callSuper("_render", ctx)
     ctx.drawImage(
-        imageElement,
-        -(this.width / 2),
-        -(this.height / 2),
-        this.width,
-        this.height
+      imageElement,
+      -(this.width / 2),
+      -(this.height / 2),
+      this.width,
+      this.height
     )
   }
 });

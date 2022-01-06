@@ -1,7 +1,6 @@
 <template>
   <div oncontextmenu="return false;">
     <canvas id="canvas"></canvas>
-    <div id="menu"></div>
   </div>
 </template>
 
@@ -10,10 +9,10 @@ import { fabric } from "fabric";
 
 import { Card } from "@/gameObjects/Card";
 import { canvasMixin } from "@/mixins/canvasMixin";
-import {Piece} from "@/gameObjects/Piece";
-import {DiceNumber} from "@/gameObjects/DiceNumber";
-import {CardImage} from "@/gameObjects/CardImage";
-import {DiceImage} from "@/gameObjects/DiceImage";
+import { Piece } from "@/gameObjects/Piece";
+import { DiceNumber } from "@/gameObjects/DiceNumber";
+import { CardImage } from "@/gameObjects/CardImage";
+import { DiceImage } from "@/gameObjects/DiceImage";
 
 export default {
   name: "FabricCanvas",
@@ -45,35 +44,6 @@ export default {
     this.canvas.on("object:rotating", this.onChange);
     this.canvas.on("object:modified", this.emitObjectModified);
     this.canvas.on("object:modified", this.onChange);
-
-    //event doubleclick pour le dé
-    this.canvas.on("mouse:dblclick", (e) => {
-      const object = e.target;
-      if (object.onDoubleClick !== undefined) {
-        object.onDoubleClick(this.canvas);
-        this.canvas.renderAll();
-      }
-    });
-
-    /* Gestion des menus */
-    this.canvas.on("selection:created", (e) => {
-      const object = e.selected[0];
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
-      }
-    });
-    this.canvas.on("object:moving", (e) => {
-      const object = e.transform.target;
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(true, object.left, object.top);
-      }
-    });
-    this.canvas.on("selection:cleared", (e) => {
-      const object = e.deselected[0];
-      if (object.getMenu !== undefined) {
-        object.getMenu(this.canvas).openMenu(false);
-      }
-    });
 
     this.emitter.on("create_card", (card) => {
       this.canvas.add(card);
@@ -154,18 +124,20 @@ export default {
 
       switch (objectToAdd.type) {
         case "Card":
-          object_duplicate = new Card(objectToAdd); break;
+          object_duplicate = new Card(objectToAdd);
+          break;
         case "Piece":
-          object_duplicate = new Piece(objectToAdd); break;
+          object_duplicate = new Piece(objectToAdd);
+          break;
         case "DiceNumber":
-          object_duplicate = new DiceNumber(objectToAdd); break;
+          object_duplicate = new DiceNumber(objectToAdd);
+          break;
         case "CardImage":
-          object_duplicate = new CardImage(objectToAdd); break;
+          object_duplicate = new CardImage(objectToAdd);
+          break;
         case "DiceImage":
           object_duplicate = new DiceImage(objectToAdd);
-          console.log(object_duplicate)
           break;
-
       }
 
       if (object_duplicate) {

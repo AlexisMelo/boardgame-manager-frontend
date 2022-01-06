@@ -36,7 +36,6 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
 
     getMenu: function (canvas) {
-        console.log("ouverture menu")
         return new Menu([
             new MenuItem("Rotate 180", () => {
                 this.rotate(this.angle + 180)
@@ -59,6 +58,15 @@ export let Card = fabric.util.createClass(fabric.Rect, {
             id: this.get("id"),
             type: this.get("type")
         })
+    },
+
+    onDeseleced: function (canvas) {
+        this.getMenu(canvas).openMenu(false);
+    },
+
+    onMouseDown: function (canvas, e) {
+        if (e.button === 3)
+            this.getMenu(canvas).openMenu(true, this.left, this.top);
     },
 
     _render: function (ctx) {

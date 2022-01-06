@@ -24,11 +24,7 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
     this.indexActiveFace = 0 //this.newRandomIndex()
 
     let imageElement = document.createElement("img")
-    let src = this.listFace[this.indexActiveFace]
-    if (src instanceof File) {
-      src = URL.createObjectURL(src)
-    }
-    imageElement.src = src
+    imageElement.src = this.listFace[this.indexActiveFace]
     imageElement.alt = options.alt || "Alternative text"
 
     options.width = this.width

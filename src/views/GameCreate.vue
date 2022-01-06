@@ -2,17 +2,19 @@
   <div class="gameCreateContainer">
     <div class="navbar">
       <img
-          alt="Back to home page"
-          class="homeButton"
-          src="@/assets/home.png"
-          @click="backToHome()"
+        alt="Back to home page"
+        class="homeButton"
+        src="@/assets/home.png"
+        @click="backToHome()"
       />
       <div class="username">{{ this.username }}</div>
 
-      <ButtonCreateDice @new="createNewDice"/>
+      <ButtonCreateDice @new="newItem"/>
 
       <button class="navButton" @click="createNewCard">Add card</button>
-      <button class="navButton" @click="createNewCardImage">Add card image</button>
+      <button class="navButton" @click="createNewCardImage">
+        Add card image
+      </button>
 
       <button class="navButton" @click="createNewPiece">Add piece</button>
 
@@ -25,6 +27,7 @@
       Start game with these {{ this.numberOfItems }} items
     </button>
   </div>
+  <div id="menu"></div>
 </template>
 
 <script>
@@ -34,8 +37,8 @@ import {mapState} from "vuex";
 import {Card} from "@/gameObjects/Card";
 import {Piece} from "@/gameObjects/Piece";
 import {CardImage} from "@/gameObjects/CardImage";
-import {DiceImage} from "@/gameObjects/DiceImage";
 import ButtonCreateDice from "@/components/ButtonCreateDice";
+
 
 export default {
   name: "GameCreate",
@@ -48,7 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({username: "username"}),
+    ...mapState({ username: "username" }),
     numberOfItems() {
       if (!this.canvas) {
         return 0;
@@ -69,37 +72,75 @@ export default {
     });
 
     let subtitle = new fabric.Text(
-        `Prepare the room with items before the game starts`,
-        {
-          fontFamily: "Comic Sans",
-          left: 480,
-          top: 450,
-          id: "room_init_st",
-          type: "Text",
-          selectable: false,
-        }
+      `Prepare the room with items before the game starts`,
+      {
+        fontFamily: "Comic Sans",
+        left: 480,
+        top: 450,
+        id: "room_init_st",
+        type: "Text",
+        selectable: false,
+      }
     );
     this.canvas.add(titre);
     this.canvas.add(subtitle);
+
+    /* Gestion des menus */
+    // this.canvas.on("selection:created", (e) => {
+    //   const object = e.selected[0];
+    //   if (object.getMenu !== undefined) {
+    //     object.getMenu(this.canvas).openMenu(true, object.left, object.top);
+    //   }
+    // });
+    this.canvas.on("object:moving", (e) => {
+      const object = e.transform.target;
+      if (object?.onMoving !== undefined) {
+        object.onMoving(this.canvas, e);
+      }
+    });
+    this.canvas.on("mouse:down", (e) => {
+      const object = e.target;
+      if (object?.onMouseDown !== undefined) {
+        object.onMouseDown(this.canvas, e);
+      }
+    });
+    this.canvas.on("selection:cleared", (e) => {
+      const object = e.deselected[0];
+      if (object?.onDeseleced !== undefined) {
+        object.onDeseleced(this.canvas, e);
+      }
+    });
+    this.canvas.on("mouse:dblclick", (e) => {
+      const object = e.target;
+      if (object?.onDoubleClick !== undefined) {
+        object.onDoubleClick(this.canvas);
+        this.canvas.renderAll();
+      }
+    });
   },
   methods: {
+    newItem(item) {
+      console.log(item)
+      this.canvas.add(item)
+      this.canvas.requestRenderAll()
+    },
     save() {
       let exportedObjects = this.canvas
-          .getObjects()
-          .filter(
-              (obj) => !(obj.id === "room_init") & !(obj.id === "room_init_st")
-          );
-      let save = {canvasObjects: exportedObjects};
+        .getObjects()
+        .filter(
+          (obj) => !(obj.id === "room_init") & !(obj.id === "room_init_st")
+        );
+      let save = { canvasObjects: exportedObjects };
       let element = document.createElement("a");
       let data =
-          "data:text/json;charset=utf-8," +
-          encodeURIComponent(JSON.stringify(save));
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(save));
       let todayDate = new Date().toLocaleDateString();
       element.style.display = "none";
       element.setAttribute("href", data);
       element.setAttribute(
-          "download",
-          `Boardgame-Initialization-${this.room}-${todayDate}.json`
+        "download",
+        `Boardgame-Initialization-${this.room}-${todayDate}.json`
       );
       document.body.appendChild(element);
       element.click();
@@ -113,22 +154,22 @@ export default {
     },
     postCreateRoom() {
       let objects = this.canvas
-          .getObjects()
-          .filter(
-              (obj) => !(obj.id === "room_init") & !(obj.id === "room_init_st")
-          );
+        .getObjects()
+        .filter(
+          (obj) => !(obj.id === "room_init") & !(obj.id === "room_init_st")
+        );
       this.axios
-          .post("http://0.0.0.0:3001/room/create", {
-            room_name: this.room,
-            objects: objects,
-          })
-          .then(() => {
-            this.$router.push(`/game/${this.room}`);
-            this.$toast.success("Room created !");
-          })
-          .catch((error) => {
-            this.$toast.error(error.response.data.message);
-          });
+        .post("http://0.0.0.0:3001/room/create", {
+          room_name: this.room,
+          objects: objects,
+        })
+        .then(() => {
+          this.$router.push(`/game/${this.room}`);
+          this.$toast.success("Room created !");
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data.message);
+        });
     },
     createNewCard() {
       let figures = [
@@ -149,7 +190,7 @@ export default {
       let type = ["Carreau", "Pique", "Coeur", "Trèfle"];
       let card = new Card({
         label: `${figures[Math.floor(Math.random() * figures.length)]} de ${
-            type[Math.floor(Math.random() * type.length)]
+          type[Math.floor(Math.random() * type.length)]
         }`,
         left: 200,
       });
@@ -160,34 +201,19 @@ export default {
         srcRecto: require("@/assets/ace_spade.png"),
         srcVerso: require("@/assets/verso.png"),
         top: 200,
-        left: 200
-      })
-      this.canvas.add(cardImage)
+        left: 200,
+      });
+      this.canvas.add(cardImage);
     },
     createNewPiece() {
       let piece = new Piece({
         src: require("@/assets/hotel.png"),
         left: 100,
-        top: 100
-      })
-      this.canvas.add(piece)
+        top: 100,
+      });
+      this.canvas.add(piece);
     },
-    createNewDice(dice) {
-      this.canvas.add(dice)
-    },
-    createNewDeck() {
-    },
-    createNewDiceImage() {
-      let diceImage = new DiceImage({
-        listFace: [
-          require("@/assets/hotel.png"),
-          require("@/assets/ace_spade.png"),
-          require("@/assets/maison.png"),
-          require("@/assets/voiture.png")
-        ]
-      })
-      this.canvas.add(diceImage)
-    }
+    createNewDeck() {},
   },
 };
 </script>
@@ -230,6 +256,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+
 .gameCreateContainer {
   margin-left: 10vw;
   margin-right: 10vw;
@@ -296,6 +323,7 @@ h1 {
 
 .startGameButton:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-  0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
+
 </style>
