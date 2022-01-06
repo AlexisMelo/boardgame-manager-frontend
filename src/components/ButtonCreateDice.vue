@@ -41,7 +41,6 @@
 
 <script>
 import {DiceNumber} from "@/gameObjects/DiceNumber";
-import {DiceImage} from "@/gameObjects/DiceImage";
 
 export default {
   emits: ["new"],
