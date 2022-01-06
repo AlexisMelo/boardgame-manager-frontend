@@ -1,6 +1,6 @@
-import {fabric} from "fabric";
-import {Menu} from "@/gameObjects/Menu";
-import {MenuItem} from "@/gameObjects/MenuItem";
+import { fabric } from "fabric";
+import { Menu } from "@/gameObjects/Menu";
+import { MenuItem } from "@/gameObjects/MenuItem";
 import { v4 as uuidv4 } from "uuid";
 
 export let DiceImage = fabric.util.createClass(fabric.Image, {
@@ -55,11 +55,22 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
     ]);
   },
 
-  onDoubleClick: function (canvas) {
+  changeImage: function (canvas) {
     this.indexActiveFace = this.newRandomIndex()
-    this.image.src = this.listFace[this.indexActiveFace];
+    this.src = this.listFace[this.indexActiveFace];
     this.dirty = true;
     canvas.requestRenderAll();
+  },
+  onDoubleClick: function (canvas) {
+    this.changeImage(canvas)
+  },
+  onDeseleced: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
+
+  onMouseDown: function (canvas, e) {
+    if (e.button === 3)
+      this.getMenu(canvas).openMenu(true, this.left, this.top);
   },
 
   toObject: function () {
@@ -81,11 +92,11 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
     imageElement.alt = this.alt
     this.callSuper("_render", ctx)
     ctx.drawImage(
-        imageElement,
-        -(this.width / 2),
-        -(this.height / 2),
-        this.width,
-        this.height
+      imageElement,
+      -(this.width / 2),
+      -(this.height / 2),
+      this.width,
+      this.height
     )
   }
 });

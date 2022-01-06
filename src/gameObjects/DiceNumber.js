@@ -47,6 +47,15 @@ export let DiceNumber = fabric.util.createClass(fabric.Rect, {
     canvas.requestRenderAll();
   },
 
+  onDeseleced: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
+
+  onMouseDown: function (canvas, e) {
+    if (e.button === 3)
+      this.getMenu(canvas).openMenu(true, this.left, this.top);
+  },
+
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
       number: this.get("number"),
