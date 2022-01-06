@@ -94,7 +94,7 @@ export default {
     // });
     this.canvas.on("object:moving", (e) => {
       const object = e.transform.target;
-      if (object.onMoving !== undefined) {
+      if (object?.onMoving !== undefined) {
         object.onMoving(this.canvas, e);
       }
     });
@@ -106,8 +106,15 @@ export default {
     });
     this.canvas.on("selection:cleared", (e) => {
       const object = e.deselected[0];
-      if (object.onDeseleced !== undefined) {
+      if (object?.onDeseleced !== undefined) {
         object.onDeseleced(this.canvas, e);
+      }
+    });
+    this.canvas.on("mouse:dblclick", (e) => {
+      const object = e.target;
+      if (object?.onDoubleClick !== undefined) {
+        object.onDoubleClick(this.canvas);
+        this.canvas.renderAll();
       }
     });
   },

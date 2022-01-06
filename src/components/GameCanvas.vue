@@ -45,15 +45,6 @@ export default {
     this.canvas.on("object:modified", this.emitObjectModified);
     this.canvas.on("object:modified", this.onChange);
 
-    //event doubleclick pour le dé
-    this.canvas.on("mouse:dblclick", (e) => {
-      const object = e.target;
-      if (object.onDoubleClick !== undefined) {
-        object.onDoubleClick(this.canvas);
-        this.canvas.renderAll();
-      }
-    });
-
     this.emitter.on("create_card", (card) => {
       this.canvas.add(card);
       this.socket.emit("object-added", {
