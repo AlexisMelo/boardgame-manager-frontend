@@ -51,6 +51,10 @@ export const Menu = class {
         return this.html
     }
 
+    add(menuItem) {
+        this.menuItemArray.push(menuItem)
+    }
+
     getContextMenu() {
         return this.html.children[0]
     }

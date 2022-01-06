@@ -36,7 +36,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
 
     getMenu: function (canvas) {
-        return new Menu([
+        const menu = new Menu([
             new MenuItem("Rotate 180", () => {
                 this.rotate(this.angle + 180)
                 canvas.requestRenderAll();
@@ -50,6 +50,17 @@ export let Card = fabric.util.createClass(fabric.Rect, {
                 canvas.requestRenderAll();
             }),
         ]);
+        if (this.isDeckIntersection(canvas)) {
+            const thisCard = this
+            menu.add(
+                new MenuItem("Add to Deck", () => {
+                    this.getDeckIntersection(canvas).addToDeck(thisCard)
+                    canvas.discardActiveObject().renderAll();
+                    canvas.remove(thisCard)
+                })
+            )
+        }
+        return menu
     },
 
     toObject: function () {
@@ -65,8 +76,28 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     },
 
     onMouseDown: function (canvas, e) {
-        if (e.button === 3)
+        if (e.button === 3) {
             this.getMenu(canvas).openMenu(true, this.left, this.top);
+        }
+    },
+
+    getDeckIntersection: function (canvas) {
+        let intersection = undefined
+        console.log("Object changed")
+        this.setCoords()
+        const card = this
+        canvas.forEachObject(function (obj) {
+            if (obj === card) return
+            if (obj.type === "Deck" && card.intersectsWithObject(obj)) {
+                intersection = obj
+
+            }
+        })
+        console.log()
+        return intersection
+    },
+    isDeckIntersection: function (canvas) {
+        return this.getDeckIntersection(canvas) !== undefined
     },
 
     _render: function (ctx) {

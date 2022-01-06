@@ -39,6 +39,7 @@ import { Card } from "@/gameObjects/Card";
 import { DiceNumber } from "@/gameObjects/DiceNumber";
 import { Piece } from "@/gameObjects/Piece";
 import { CardImage } from "@/gameObjects/CardImage";
+import { Deck } from "@/gameObjects/Deck";
 import { DiceImage } from "@/gameObjects/DiceImage";
 
 export default {
@@ -215,7 +216,13 @@ export default {
       });
       this.canvas.add(dice);
     },
-    createNewDeck() {},
+    createNewDeck() {
+      let deck = new Deck({
+        left: 100,
+        top: 100,
+      });
+      this.canvas.add(deck);
+    },
     createNewDiceImage() {
       let diceImage = new DiceImage({
         listFace: [

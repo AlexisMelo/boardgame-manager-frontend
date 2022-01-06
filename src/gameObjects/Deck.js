@@ -1,5 +1,7 @@
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from "uuid";
+import { Menu } from "@/gameObjects/Menu";
+import { MenuItem } from "@/gameObjects/MenuItem";
 
 export let Deck = fabric.util.createClass(fabric.Rect, {
   type: "Deck",
@@ -29,6 +31,21 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
       mr: false,
       mb: false,
     });
+  },
+
+  getMenu: function () {
+    const currentList = this.list
+    return new Menu([
+      new MenuItem(`${currentList.length}items`, () => { }),
+    ]);
+  },
+  onDeseleced: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
+
+  onMouseDown: function (canvas, e) {
+    if (e.button === 3)
+      this.getMenu(canvas).openMenu(true, this.left, this.top);
   },
 
   addToDeck: function (card) {
