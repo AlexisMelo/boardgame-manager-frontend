@@ -1,4 +1,4 @@
-import {fabric} from "fabric";
+import { fabric } from "fabric";
 
 export const canvasMixin = {
     methods: {
@@ -7,6 +7,9 @@ export const canvasMixin = {
                 selectionColor: "rgba(255,0,0,0.2)",
                 selectionLineWidth: 5,
                 selectionBorderColor: "rgba(255,0,0,0.5)",
+                fireRightClick: true,  // <-- enable firing of right click events
+                fireMiddleClick: true, // <-- enable firing of middle click events
+                stopContextMenu: true, // <--  prevent context menu from showing
             })
 
             window.addEventListener("resize", () => {
