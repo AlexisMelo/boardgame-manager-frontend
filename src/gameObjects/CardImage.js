@@ -1,58 +1,63 @@
 import { fabric } from "fabric";
 import { Menu } from "@/gameObjects/Menu";
 import { MenuItem } from "@/gameObjects/MenuItem";
+import { v4 as uuidv4 } from "uuid";
 
-export let CardImage = fabric.util.createClass(fabric.Rect, {
+export let CardImage = fabric.util.createClass(fabric.Image, {
   type: "CardImage",
+  src: null,
 
   initialize: function (options) {
     options || (options = {});
-    var that = this;
-    this.imageLoaded = false;
-    this.imageRecto = options.urlRecto;
-    this.imageVerso = options.urlVerso;
-    this.currentImage = this.imageRecto;
-    this.dirty = true;
-    this.set("height", 150);
-    fabric.util.loadImage(
-      this.currentImage,
-      function (img) {
-        that.set("image", img);
-        that.imageLoaded = true;
-        that.dirty = true;
-        that.width = 100;
-        that.height = 150;
-      },
-      {
-        crossOrigin: "annonymous",
-      }
-    );
-    this.callSuper("initialize", options);
+
+    this.set({
+      srcRecto: options.srcRecto,
+      srcVerso: options.srcVerso,
+      id: options.id || uuidv4(),
+      src: options.srcRecto,
+      height: options.height || 150,
+      width: options.width || 100,
+      alt: options.alt || "Alternative text"
+    })
+
+    let imageElement = document.createElement("img")
+    imageElement.src = this.src
+    imageElement.alt = this.alt
+
+    options.width = this.width
+    options.height = this.height
+
+    this.callSuper("initialize", imageElement, options);
   },
 
   onDoubleClick: function (canvas) {
-    this.return();
+    this.turn();
     this.dirty = true;
     canvas.requestRenderAll();
   },
 
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
-      image: this.image,
+      srcRecto: this.srcRecto,
+      srcVerso: this.srcVerso,
+      src: this.src,
+      id: this.id
     });
   },
 
-  return: function () {
-    if (this.currentImage === this.urlRecto) this.currentImage = this.urlVerso;
-    else this.currentImage = this.urlRecto;
-    this.image.src = this.currentImage;
+  turn: function () {
+    if (this.src === this.srcRecto) {
+      this.src = this.srcVerso;
+    } else {
+      this.src = this.srcRecto
+    }
     this.dirty = true;
   },
 
   getMenu: function (canvas) {
     return new Menu([
       new MenuItem("Return", () => {
-        this.return();
+        this.turn();
         canvas.requestRenderAll();
       }),
       new MenuItem("Rotate 180", () => {
@@ -71,16 +76,16 @@ export let CardImage = fabric.util.createClass(fabric.Rect, {
   },
 
   _render: function (ctx) {
-    this.callSuper("_render", ctx);
-    console.log("render CardImage");
-    console.log(this.image);
-    this.imageLoaded &&
-      ctx.drawImage(
-        this.image,
+    let imageElement = document.createElement("img")
+    imageElement.src = this.src
+    imageElement.alt = this.alt
+    this.callSuper("_render", ctx)
+    ctx.drawImage(
+        imageElement,
         -(this.width / 2),
         -(this.height / 2),
         this.width,
         this.height
-      );
-  },
+    )
+  }
 });

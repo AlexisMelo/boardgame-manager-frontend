@@ -1,35 +1,36 @@
 import { fabric } from "fabric";
 import { Menu } from "@/gameObjects/Menu";
 import { MenuItem } from "@/gameObjects/MenuItem";
+import { v4 as uuidv4 } from "uuid";
 
-export let Piece = fabric.util.createClass(fabric.Rect, {
+export let Piece = fabric.util.createClass(fabric.Image, {
   type: "Piece",
+  src: null,
 
   initialize: function (options) {
     options || (options = {});
-    var that = this;
-    this.imageLoaded = false;
-    this.url = options.url;
-    this.dirty = true;
-    this.width = options.width;
-    this.height = options.height;
-    fabric.util.loadImage(
-      this.url,
-      function (img) {
-        that.set("image", img);
-        that.imageLoaded = true;
-        that.dirty = true;
-      },
-      {
-        crossOrigin: "annonymous",
-      }
-    );
-    this.callSuper("initialize", options);
+
+    this.set({
+      src: options.src,
+      id: options.id || uuidv4(),
+      height: options.height || 70,
+      width: options.width || 70
+    })
+
+    let imageElement = document.createElement("img")
+    imageElement.src = options.src
+    imageElement.alt = options.alt || "Alternative text"
+
+    options.width = this.width
+    options.height = this.height
+
+    this.callSuper("initialize", imageElement, options);
   },
 
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
-      image: this.image,
+      id: this.id,
+      src: this.src
     });
   },
 
@@ -51,16 +52,16 @@ export let Piece = fabric.util.createClass(fabric.Rect, {
   },
 
   _render: function (ctx) {
-    this.callSuper("_render", ctx);
-    console.log("render Piece");
-    console.log(this.image);
-    this.imageLoaded &&
-      ctx.drawImage(
-        this.image,
+    let imageElement = document.createElement("img")
+    imageElement.src = this.src
+    imageElement.alt = this.alt
+    this.callSuper("_render", ctx)
+    ctx.drawImage(
+        imageElement,
         -(this.width / 2),
         -(this.height / 2),
         this.width,
         this.height
-      );
-  },
+    )
+  }
 });

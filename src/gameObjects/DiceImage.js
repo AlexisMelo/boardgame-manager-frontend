@@ -1,40 +1,41 @@
-import { fabric } from "fabric";
-import { Menu } from "@/gameObjects/Menu";
-import { MenuItem } from "@/gameObjects/MenuItem";
+import {fabric} from "fabric";
+import {Menu} from "@/gameObjects/Menu";
+import {MenuItem} from "@/gameObjects/MenuItem";
+import { v4 as uuidv4 } from "uuid";
 
-export let DiceImage = fabric.util.createClass(fabric.Rect, {
+export let DiceImage = fabric.util.createClass(fabric.Image, {
   type: "DiceImage",
+  src: null,
 
   initialize: function (options) {
     options || (options = {});
-    this.callSuper("initialize", options);
-    var that = this;
-    this.dirty = true;
-    this.listFace = options.listFace || [];
-    this.fill = "white";
-    this.stroke = "black";
-    this.strokeWidth = 1;
-    this.indActiveFace = this.newRandomInd();
-    fabric.util.loadImage(
-      this.listFace[this.indActiveFace],
-      function (img) {
-        that.set("image", img);
-        that.imageLoaded = true;
-        that.dirty = true;
-        that.width = 70;
-        that.height = 70;
-      },
-      {
-        crossOrigin: "annonymous",
-      }
-    );
+
+    this.set({
+      listFace: options.listFace || [],
+      fill: "white",
+      stroke: "black",
+      strokeWidth: 1,
+      width: options.width || 50,
+      height: options.height || 50,
+      id: options.id || uuidv4(),
+    })
+
+    this.indexActiveFace = 0 //this.newRandomIndex()
+
+    let imageElement = document.createElement("img")
+    imageElement.src = this.listFace[this.indexActiveFace]
+    imageElement.alt = options.alt || "Alternative text"
+
+    options.width = this.width
+    options.height = this.height
+
+    this.callSuper("initialize", imageElement, options);
   },
 
   getMenu: function (canvas) {
     return new Menu([
       new MenuItem("Roll the dice", () => {
-        this.number = this.newRandomInd();
-        this.image.src = this.listFace[this.number];
+        this.indexActiveFace = this.newRandomIndex();
         this.dirty = true;
         canvas.requestRenderAll();
       }),
@@ -54,34 +55,35 @@ export let DiceImage = fabric.util.createClass(fabric.Rect, {
   },
 
   onDoubleClick: function (canvas) {
-    this.number = this.newRandomInd();
-    this.image.src = this.listFace[this.number];
+    this.indexActiveFace = this.newRandomIndex()
+    this.image.src = this.listFace[this.indexActiveFace];
     this.dirty = true;
     canvas.requestRenderAll();
   },
 
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
-      number: this.get("number"),
+      indexActiveFace: this.indexActiveFace,
+      id: this.id,
+      listFace: this.listFace
     });
   },
 
-  newRandomInd: function () {
-    let tmp = Math.floor(Math.random() * this.listFace.length);
-    console.log(tmp);
-    return tmp;
+  newRandomIndex: function () {
+    return Math.floor(Math.random() * this.listFace.length);
   },
 
   _render: function (ctx) {
-    this.callSuper("_render", ctx);
-    console.log("render DiceImage");
-    this.imageLoaded &&
-      ctx.drawImage(
-        this.image,
+    let imageElement = document.createElement("img")
+    imageElement.src = this.listFace[this.indexActiveFace]
+    imageElement.alt = this.alt
+    this.callSuper("_render", ctx)
+    ctx.drawImage(
+        imageElement,
         -(this.width / 2),
         -(this.height / 2),
         this.width,
         this.height
-      );
-  },
+    )
+  }
 });

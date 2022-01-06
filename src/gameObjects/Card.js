@@ -10,13 +10,13 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     defaultFill: "#e9c46a",
     fill: "#E4E5E5",
     defaultLabel: "Carte vide",
-    id: "SEXE",
+    id: "default_id",
 
     initialize: function (options) {
         options || (options = {})
         this.callSuper("initialize", options)
-        this.set("label", options.label || this.defaultLabel)
         this.set({
+            "label": options.label || this.defaultLabel,
             "height": options.height || this.height,
             "width": options.width || this.width,
             "fill": options.fill || this.defaultFill,
@@ -36,6 +36,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
 
     getMenu: function (canvas) {
+        console.log("ouverture menu")
         return new Menu([
             new MenuItem("Rotate 180", () => {
                 this.rotate(this.angle + 180)

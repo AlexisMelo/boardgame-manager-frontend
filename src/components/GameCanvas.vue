@@ -10,6 +10,10 @@ import { fabric } from "fabric";
 
 import { Card } from "@/gameObjects/Card";
 import { canvasMixin } from "@/mixins/canvasMixin";
+import {Piece} from "@/gameObjects/Piece";
+import {DiceNumber} from "@/gameObjects/DiceNumber";
+import {CardImage} from "@/gameObjects/CardImage";
+import {DiceImage} from "@/gameObjects/DiceImage";
 
 export default {
   name: "FabricCanvas",
@@ -147,10 +151,20 @@ export default {
     addObject(objectToAdd) {
       // we'll pull out the object and id from the data object the socket emitted
       let object_duplicate;
-      // check the type of the obj we received and create an object of that type
-      if (objectToAdd.type === "Card") {
-        object_duplicate = new Card(objectToAdd);
+
+      switch (objectToAdd.type) {
+        case "Card":
+          object_duplicate = new Card(objectToAdd); break;
+        case "Piece":
+          object_duplicate = new Piece(objectToAdd); break;
+        case "DiceNumber":
+          object_duplicate = new DiceNumber(objectToAdd); break;
+        case "CardImage":
+          object_duplicate = new CardImage(objectToAdd); break;
+        case "DiceImage":
+          object_duplicate = new DiceImage(objectToAdd); break;
       }
+
       if (object_duplicate) {
         this.canvas.add(object_duplicate);
         this.canvas.renderAll();
