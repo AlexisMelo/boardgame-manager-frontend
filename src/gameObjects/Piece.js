@@ -54,6 +54,9 @@ export let Piece = fabric.util.createClass(fabric.Image, {
   onDeseleced: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
+  onMoving: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
 
   onMouseDown: function (canvas, e) {
     if (e.button === 3)

@@ -80,10 +80,12 @@ export let Card = fabric.util.createClass(fabric.Rect, {
             this.getMenu(canvas).openMenu(true, this.left, this.top);
         }
     },
+    onMoving: function (canvas) {
+        this.getMenu(canvas).openMenu(false);
+    },
 
     getDeckIntersection: function (canvas) {
         let intersection = undefined
-        console.log("Object changed")
         this.setCoords()
         const card = this
         canvas.forEachObject(function (obj) {
@@ -99,6 +101,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     isDeckIntersection: function (canvas) {
         return this.getDeckIntersection(canvas) !== undefined
     },
+
 
     _render: function (ctx) {
         this.callSuper("_render", ctx)

@@ -47,6 +47,9 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
     if (e.button === 3)
       this.getMenu(canvas).openMenu(true, this.left, this.top);
   },
+  onMoving: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
 
   addToDeck: function (card) {
     this.list.push(card);

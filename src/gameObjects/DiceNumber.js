@@ -50,6 +50,9 @@ export let DiceNumber = fabric.util.createClass(fabric.Rect, {
   onDeseleced: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
+  onMoving: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
 
   onMouseDown: function (canvas, e) {
     if (e.button === 3)

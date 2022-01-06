@@ -83,6 +83,9 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
     if (e.button === 3)
       this.getMenu(canvas).openMenu(true, this.left, this.top);
   },
+  onMoving: function (canvas) {
+    this.getMenu(canvas).openMenu(false);
+  },
 
   _render: function (ctx) {
     let imageElement = document.createElement("img")
