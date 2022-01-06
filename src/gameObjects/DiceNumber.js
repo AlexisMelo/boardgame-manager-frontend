@@ -16,8 +16,6 @@ export let DiceNumber = fabric.util.createClass(fabric.Rect, {
     this.fill = "white";
     this.stroke = "black";
     this.strokeWidth = 1;
-    console.log("min", this.min);
-    console.log("max", this.max);
     this.number = this.newRandom();
   },
 

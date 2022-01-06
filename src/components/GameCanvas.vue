@@ -162,7 +162,10 @@ export default {
         case "CardImage":
           object_duplicate = new CardImage(objectToAdd); break;
         case "DiceImage":
-          object_duplicate = new DiceImage(objectToAdd); break;
+          object_duplicate = new DiceImage(objectToAdd);
+          console.log(object_duplicate)
+          break;
+
       }
 
       if (object_duplicate) {

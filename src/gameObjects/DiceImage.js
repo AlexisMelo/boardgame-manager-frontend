@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 export let DiceImage = fabric.util.createClass(fabric.Image, {
   type: "DiceImage",
   src: null,
+  listFace: [],
 
   initialize: function (options) {
     options || (options = {});
@@ -15,15 +16,19 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
       fill: "white",
       stroke: "black",
       strokeWidth: 1,
-      width: options.width || 50,
-      height: options.height || 50,
+      width: options.width || 200,
+      height: options.height || 200,
       id: options.id || uuidv4(),
     })
 
     this.indexActiveFace = 0 //this.newRandomIndex()
 
     let imageElement = document.createElement("img")
-    imageElement.src = this.listFace[this.indexActiveFace]
+    let src = this.listFace[this.indexActiveFace]
+    if (src instanceof File) {
+      src = URL.createObjectURL(src)
+    }
+    imageElement.src = src
     imageElement.alt = options.alt || "Alternative text"
 
     options.width = this.width
@@ -62,6 +67,7 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
   },
 
   toObject: function () {
+    console.log(this.listFace)
     return fabric.util.object.extend(this.callSuper("toObject"), {
       indexActiveFace: this.indexActiveFace,
       id: this.id,

@@ -8,12 +8,13 @@
           @click="backToHome()"
       />
       <div class="username">{{ this.username }}</div>
+
+      <ButtonCreateDice @new="createNewDice"/>
+
       <button class="navButton" @click="createNewCard">Add card</button>
       <button class="navButton" @click="createNewCardImage">Add card image</button>
 
       <button class="navButton" @click="createNewPiece">Add piece</button>
-      <button class="navButton" @click="createNewDice">Add dice</button>
-      <button class="navButton" @click="createNewDiceImage">Add dice Image</button>
 
       <button class="navButton" @click="createNewDeck">Add deck</button>
       <button class="save" @click="save">Save</button>
@@ -31,13 +32,14 @@ import {canvasMixin} from "@/mixins/canvasMixin";
 import {fabric} from "fabric";
 import {mapState} from "vuex";
 import {Card} from "@/gameObjects/Card";
-import {DiceNumber} from "@/gameObjects/DiceNumber";
 import {Piece} from "@/gameObjects/Piece";
 import {CardImage} from "@/gameObjects/CardImage";
 import {DiceImage} from "@/gameObjects/DiceImage";
+import ButtonCreateDice from "@/components/ButtonCreateDice";
 
 export default {
   name: "GameCreate",
+  components: {ButtonCreateDice},
   mixins: [canvasMixin],
   data() {
     return {
@@ -170,11 +172,7 @@ export default {
       })
       this.canvas.add(piece)
     },
-    createNewDice() {
-      let dice = new DiceNumber({
-        left: 100,
-        top: 100,
-      })
+    createNewDice(dice) {
       this.canvas.add(dice)
     },
     createNewDeck() {
@@ -193,6 +191,43 @@ export default {
   },
 };
 </script>
+
+
+<style lang="scss">
+
+.navButton {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.navButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+  0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.upload {
+  @extend .navButton !optional;
+  color: gray;
+  background-color: lightgray;
+}
+
+.save {
+  @extend .navButton !optional;
+  color: gray;
+  background-color: lightgray;
+}
+
+</style>
 
 <style lang="scss" scoped>
 .gameCreateContainer {
@@ -253,7 +288,6 @@ h1 {
   cursor: pointer;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
-  z-index: 10;
   position: fixed;
   bottom: 10px;
   left: 50%;
@@ -263,37 +297,5 @@ h1 {
 .startGameButton:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
   0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
-.navButton {
-  background-color: #4caf50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-}
-
-.navButton:hover {
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-  0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
-.upload {
-  @extend .navButton;
-  color: gray;
-  background-color: lightgray;
-}
-
-.save {
-  @extend .navButton;
-  color: gray;
-  background-color: lightgray;
 }
 </style>
