@@ -33,11 +33,22 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
     });
   },
 
-  getMenu: function () {
+  getMenu: function (canvas) {
     const currentList = this.list
     return new Menu([
-      new MenuItem(`${currentList.length}items`, () => { }),
+      new MenuItem(`${currentList.length} card${currentList.length > 1 ? "s" : ""}`, () => { }),
+      new MenuItem(`Tirer la carte du dessus`, () => {
+        canvas.add(this.list.pop())
+      }),
+      new MenuItem(`Tirer la carte du dessous`, () => {
+        canvas.add(this.list.shift())
+      }),
+      new MenuItem(`Tirer une carte aléatoire`, () => {
+      }),
     ]);
+  },
+  newRandomIndex: function () {
+    return Math.floor(Math.random() * this.list.length);
   },
   onDeseleced: function (canvas) {
     this.getMenu(canvas).openMenu(false);
