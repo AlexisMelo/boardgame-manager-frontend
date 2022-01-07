@@ -38,12 +38,22 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
     return new Menu([
       new MenuItem(`${currentList.length} card${currentList.length > 1 ? "s" : ""}`, () => { }),
       new MenuItem(`Tirer la carte du dessus`, () => {
-        canvas.add(this.list.pop())
+        if (currentList.length > 0)
+          canvas.add(this.list.pop())
       }),
       new MenuItem(`Tirer la carte du dessous`, () => {
-        canvas.add(this.list.shift())
+        if (currentList.length > 0)
+          canvas.add(this.list.shift())
       }),
       new MenuItem(`Tirer une carte aléatoire`, () => {
+        if (currentList.length > 0) {
+          const random = this.newRandomIndex()
+          console.log("random", random)
+          canvas.add(this.list[random])
+          if (random > -1) {
+            this.list.splice(random, 1);
+          }
+        }
       }),
     ]);
   },

@@ -93,6 +93,7 @@ export default {
       }
 
       if (this.faces) {
+        //TODO
         console.log("Faut faire un truc là avec le dé mdr")
       }
 

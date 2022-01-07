@@ -95,7 +95,6 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
             }
         })
-        console.log()
         return intersection
     },
     isDeckIntersection: function (canvas) {

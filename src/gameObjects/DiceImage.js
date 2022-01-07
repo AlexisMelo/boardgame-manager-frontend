@@ -77,7 +77,6 @@ export let DiceImage = fabric.util.createClass(fabric.Image, {
   },
 
   toObject: function () {
-    console.log(this.listFace)
     return fabric.util.object.extend(this.callSuper("toObject"), {
       indexActiveFace: this.indexActiveFace,
       id: this.id,
