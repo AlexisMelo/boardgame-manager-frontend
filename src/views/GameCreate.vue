@@ -10,11 +10,7 @@
       <div class="username">{{ this.username }}</div>
 
       <ButtonCreateDice @new="newItem" />
-
-      <button class="navButton" @click="createNewCard">Add card</button>
-      <button class="navButton" @click="createNewCardImage">
-        Add card image
-      </button>
+      <ButtonCreateCard @new="newItem" />
 
       <button class="navButton" @click="createNewPiece">Add piece</button>
 
@@ -41,10 +37,11 @@ import { CardImage } from "@/gameObjects/CardImage";
 import { Deck } from "@/gameObjects/Deck";
 import { DiceImage } from "@/gameObjects/DiceImage";
 import ButtonCreateDice from "@/components/ButtonCreateDice";
+import ButtonCreateCard from "@/components/ButtonCreateCard";
 
 export default {
   name: "GameCreate",
-  components: { ButtonCreateDice },
+  components: { ButtonCreateDice, ButtonCreateCard },
   mixins: [canvasMixin],
   data() {
     return {
@@ -243,7 +240,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss">
 .navButton {
