@@ -11,8 +11,7 @@
 
       <ButtonCreateDice @new="newItem" />
       <ButtonCreateCard @new="newItem" />
-
-      <button class="navButton" @click="createNewPiece">Add piece</button>
+      <ButtonCreatePiece @new="newItem" />
 
       <button class="navButton" @click="createNewDeck">Add deck</button>
       <button class="save" @click="save">Save</button>
@@ -38,10 +37,11 @@ import { Deck } from "@/gameObjects/Deck";
 import { DiceImage } from "@/gameObjects/DiceImage";
 import ButtonCreateDice from "@/components/ButtonCreateDice";
 import ButtonCreateCard from "@/components/ButtonCreateCard";
+import ButtonCreatePiece from "@/components/ButtonCreatePiece";
 
 export default {
   name: "GameCreate",
-  components: { ButtonCreateDice, ButtonCreateCard },
+  components: { ButtonCreateDice, ButtonCreateCard, ButtonCreatePiece },
   mixins: [canvasMixin],
   data() {
     return {
