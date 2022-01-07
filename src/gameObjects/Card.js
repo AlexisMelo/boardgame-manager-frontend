@@ -64,6 +64,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
     onMouseDown: function (canvas, e) {
         if (e.button === 3) {
+            canvas.setActiveObject(this);
             this.getMenu(canvas).openMenu(true, e.pointer.x, e.pointer.y);
         }
     },

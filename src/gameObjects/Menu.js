@@ -77,6 +77,9 @@ export const Menu = class {
 
         //const ul = document.createElement("ul");
         const back = document.createElement("div");
+        back.oncontextmenu = (e) => {
+            e.preventDefault()
+        }
         this.html = back
         this.menuItemArray.forEach((element, index) => {
             back.append(element.render(index + 1, this.menuItemArray.length, this.x, this.y))

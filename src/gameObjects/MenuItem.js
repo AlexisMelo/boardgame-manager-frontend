@@ -5,18 +5,36 @@ export const MenuItem = function (label, callback, image = "https://bassets.gith
     this.image = image
 }
 
-MenuItem.prototype.style = function (x, y) {
+//x du click
+//y du click
+MenuItem.prototype.style = function (x, y, nb, total) {
+
+    const [dx, dy] = this.getCoordonne(nb, total)
+
     const styleSheet = {
         "position": "fixed",
         "top": `${y}px`,
         "left": `${x}px`,
         'width': `${this.getSize()}px`,
         'height': `${this.getSize()}px`,
-        "background": "red"
-
+        'padding': `${this.getSize() / 2}px`,
+        "border-radius": "50%",
+        "background": "#e8e8f3",
+        "box-shadow": "7px 7px 15px rgba(55, 84, 170, 0.15), -2px -2px 20px white, inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0)"
     }
+
     for (const property in styleSheet)
         this.addStyle(property, styleSheet[property])
+
+    this.htmlTag.animate([
+        { transform: 'translateY(0px) translateX(0px)' },
+        { transform: `translateY(${-dy}px) translateX(${-dx}px)` },
+    ], {
+        duration: 200,
+        fill: "forwards",
+        delay: 20 * nb,
+    });
+    console.log(dx, dy)
 }
 
 
@@ -49,8 +67,10 @@ MenuItem.prototype.render = function (nbMenuItem, total, x, y) {
     this.htmlTag = document.createElement("div");
     //const label = document.createTextNode(this.label);
     //this.htmlTag.appendChild(label);
-    const [dx, dy] = this.getCoordonne(nbMenuItem, total)
-    this.style(x - dx, y - dy)
+    this.htmlTag.oncontextmenu = (e) => {
+        e.preventDefault()
+    }
+    this.style(x, y, nbMenuItem, total)
 
     this.htmlTag.addEventListener('click', () => {
         this.callback()
