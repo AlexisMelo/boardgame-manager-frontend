@@ -8,28 +8,28 @@ export const Menu = class {
     }
 
     style() {
-        const normalOffSetY = -100
-        const secondaryOffSetY = 100
+        // const normalOffSetY = -100
+        // const secondaryOffSetY = 100
 
-        const normalOffSetX = 50
-        const secondaryOffSetX = -100
+        // const normalOffSetX = 50
+        // const secondaryOffSetX = -100
 
-        const y = (this.y + normalOffSetY < 0) ? this.y + secondaryOffSetY : this.y + normalOffSetY
-        const x = (this.x + normalOffSetX > window.innerWidth) ? this.x + secondaryOffSetX : this.x + normalOffSetX
+        // const y = (this.y + normalOffSetY < 0) ? this.y + secondaryOffSetY : this.y + normalOffSetY
+        // const x = (this.x + normalOffSetX > window.innerWidth) ? this.x + secondaryOffSetX : this.x + normalOffSetX
 
-        const styleSheetUl = {
-            "zIndex": "1000",
-            "position": "fixed",
-            "top": `${y}px`,
-            "left": `${x}px`,
-            "background-color": "white",
-            "list-style": "none",
-            "padding": "0",
-            "border-radius": "2px",
-            "border": "1px solid #111",
-            "-webkit-box-shadow": "5px 5px 15px 5px rgba(163, 73, 73, 0.1)",
-            "box-shadow": "5px 5px 15px 5px rgba(0, 0, 0, 0.1)",
-        }
+        // const styleSheetUl = {
+        //     "zIndex": "1000",
+        //     "position": "fixed",
+        //     "top": `${y}px`,
+        //     "left": `${x}px`,
+        //     "background-color": "white",
+        //     "list-style": "none",
+        //     "padding": "0",
+        //     "border-radius": "2px",
+        //     "border": "1px solid #111",
+        //     "-webkit-box-shadow": "5px 5px 15px 5px rgba(163, 73, 73, 0.1)",
+        //     "box-shadow": "5px 5px 15px 5px rgba(0, 0, 0, 0.1)",
+        // }
 
         const styleSheetDiv = {
             "zIndex": "999",
@@ -41,8 +41,8 @@ export const Menu = class {
         for (const property in styleSheetDiv)
             this.getBack().style[property] = styleSheetDiv[property];
 
-        for (const property in styleSheetUl)
-            this.getContextMenu().style[property] = styleSheetUl[property];
+        // for (const property in styleSheetUl)
+        //     this.getContextMenu().style[property] = styleSheetUl[property];
 
         this.menuItemArray[0].addStyle("border-top", "none");
     }
@@ -75,15 +75,14 @@ export const Menu = class {
     render() {
         this.close()
 
-        const ul = document.createElement("ul");
+        //const ul = document.createElement("ul");
         const back = document.createElement("div");
         this.html = back
-        this.menuItemArray.forEach(element => {
-            ul.append(element.render())
+        this.menuItemArray.forEach((element, index) => {
+            back.append(element.render(index + 1, this.menuItemArray.length, this.x, this.y))
         });
 
         back.addEventListener("click", this.close)
-        back.append(ul)
         document.getElementById("menu").append(back)
         this.style()
     }
