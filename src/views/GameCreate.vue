@@ -12,8 +12,9 @@
       <ButtonCreateDice @new="newItem" />
       <ButtonCreateCard @new="newItem" />
       <ButtonCreatePiece @new="newItem" />
+      <ButtonCreateDeck @new="newItem" />
+      <!-- <button class="navButton" @click="createNewDeck">Add deck</button> -->
 
-      <button class="navButton" @click="createNewDeck">Add deck</button>
       <button class="save" @click="save">Save</button>
       <button class="upload" @click="upload">Upload</button>
     </div>
@@ -38,10 +39,16 @@ import { DiceImage } from "@/gameObjects/DiceImage";
 import ButtonCreateDice from "@/components/ButtonCreateDice";
 import ButtonCreateCard from "@/components/ButtonCreateCard";
 import ButtonCreatePiece from "@/components/ButtonCreatePiece";
+import ButtonCreateDeck from "@/components/ButtonCreateDeck";
 
 export default {
   name: "GameCreate",
-  components: { ButtonCreateDice, ButtonCreateCard, ButtonCreatePiece },
+  components: {
+    ButtonCreateDice,
+    ButtonCreateCard,
+    ButtonCreatePiece,
+    ButtonCreateDeck,
+  },
   mixins: [canvasMixin],
   data() {
     return {
@@ -116,6 +123,8 @@ export default {
         this.canvas.renderAll();
       }
     });
+
+    this.canvas.add(new Deck());
   },
   methods: {
     newItem(item) {

@@ -19,7 +19,7 @@ MenuItem.prototype.style = function (x, y, nb, total) {
         'height': `${this.getSize()}px`,
         'padding': `${this.getSize() / 2}px`,
         "border-radius": "50%",
-        "background": "#e8e8f3",
+        "background": `url("${this.image}") no-repeat 50%/50%#e8e8f3`,
         "box-shadow": "7px 7px 15px rgba(55, 84, 170, 0.15), -2px -2px 20px white, inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0)"
     }
 
@@ -34,9 +34,7 @@ MenuItem.prototype.style = function (x, y, nb, total) {
         fill: "forwards",
         delay: 20 * nb,
     });
-    console.log(dx, dy)
 }
-
 
 MenuItem.prototype.addStyle = function (property, value) {
     this.htmlTag.style[property] = value;

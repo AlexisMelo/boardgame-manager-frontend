@@ -25,19 +25,19 @@ export let DiceNumber = fabric.util.createClass(fabric.Rect, {
         this.number = this.newRandom();
         this.dirty = true;
         canvas.requestRenderAll();
-      }),
-      new MenuItem("Rotate 180", () => {
-        this.rotate(this.angle + 180);
-        canvas.requestRenderAll();
-      }),
+      }, "http://share.pacary.net/PAO/icone/dice.svg"),
       new MenuItem("Rotate 90", () => {
         this.rotate(this.angle + 90);
         canvas.requestRenderAll();
-      }),
-      new MenuItem("Rotate -90", () => {
-        this.rotate(-90);
+      }, "http://share.pacary.net/PAO/icone/turnRight.svg"),
+      new MenuItem("Rotate 180", () => {
+        this.rotate(this.angle + 180);
         canvas.requestRenderAll();
-      }),
+      }, "http://share.pacary.net/PAO/icone/turn180.svg"),
+      new MenuItem("Rote -90", () => {
+        this.rotate(this.angle - 90);
+        canvas.requestRenderAll();
+      }, "http://share.pacary.net/PAO/icone/turnLeft.svg"),
     ]);
   },
 
@@ -55,8 +55,10 @@ export let DiceNumber = fabric.util.createClass(fabric.Rect, {
   },
 
   onMouseDown: function (canvas, e) {
-    if (e.button === 3)
-      this.getMenu(canvas).openMenu(true, this.left, this.top);
+    if (e.button === 3) {
+      canvas.setActiveObject(this);
+      this.getMenu(canvas).openMenu(true, e.pointer.x, e.pointer.y);
+    }
   },
 
   toObject: function () {

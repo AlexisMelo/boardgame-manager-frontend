@@ -36,18 +36,18 @@ export let Card = fabric.util.createClass(fabric.Rect, {
 
     getMenu: function (canvas) {
         const menu = new Menu([
-            new MenuItem("Rotate 180", () => {
-                this.rotate(this.angle + 180);
-                canvas.requestRenderAll();
-            }),
             new MenuItem("Rotate 90", () => {
                 this.rotate(this.angle + 90);
                 canvas.requestRenderAll();
-            }),
-            new MenuItem("Rote -90", () => {
-                this.rotate(-90);
+            }, "http://share.pacary.net/PAO/icone/turnRight.svg"),
+            new MenuItem("Rotate 180", () => {
+                this.rotate(this.angle + 180);
                 canvas.requestRenderAll();
-            }),
+            }, "http://share.pacary.net/PAO/icone/turn180.svg"),
+            new MenuItem("Rote -90", () => {
+                this.rotate(this.angle - 90);
+                canvas.requestRenderAll();
+            }, "http://share.pacary.net/PAO/icone/turnLeft.svg"),
         ]);
         if (this.isDeckIntersection(canvas)) {
             const thisCard = this;

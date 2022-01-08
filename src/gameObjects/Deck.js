@@ -3,11 +3,10 @@ import { v4 as uuidv4 } from "uuid";
 import { Menu } from "@/gameObjects/Menu";
 import { MenuItem } from "@/gameObjects/MenuItem";
 
-export let Deck = fabric.util.createClass(fabric.Rect, {
+export let Deck = fabric.util.createClass(fabric.Image, {
   type: "Deck",
   height: 170,
   width: 120,
-  fill: "#4379d1",
   label: "Deck",
   list: [],
 
@@ -18,7 +17,6 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
     this.set({
       height: options.height || this.height,
       width: options.width || this.width,
-      fill: options.fill || this.fill,
       id: options.id || uuidv4(),
     });
     this.setControlsVisibility({
@@ -48,13 +46,24 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
       new MenuItem(`Tirer une carte aléatoire`, () => {
         if (currentList.length > 0) {
           const random = this.newRandomIndex()
-          console.log("random", random)
           canvas.add(this.list[random])
           if (random > -1) {
             this.list.splice(random, 1);
           }
         }
       }),
+      new MenuItem("Rotate 90", () => {
+        this.rotate(this.angle + 90);
+        canvas.requestRenderAll();
+      }, "http://share.pacary.net/PAO/icone/turnRight.svg"),
+      new MenuItem("Rotate 180", () => {
+        this.rotate(this.angle + 180);
+        canvas.requestRenderAll();
+      }, "http://share.pacary.net/PAO/icone/turn180.svg"),
+      new MenuItem("Rote -90", () => {
+        this.rotate(this.angle - 90);
+        canvas.requestRenderAll();
+      }, "http://share.pacary.net/PAO/icone/turnLeft.svg"),
     ]);
   },
   newRandomIndex: function () {
@@ -65,8 +74,10 @@ export let Deck = fabric.util.createClass(fabric.Rect, {
   },
 
   onMouseDown: function (canvas, e) {
-    if (e.button === 3)
-      this.getMenu(canvas).openMenu(true, this.left, this.top);
+    if (e.button === 3) {
+      canvas.setActiveObject(this);
+      this.getMenu(canvas).openMenu(true, e.pointer.x, e.pointer.y);
+    }
   },
   onMoving: function (canvas) {
     this.getMenu(canvas).openMenu(false);
