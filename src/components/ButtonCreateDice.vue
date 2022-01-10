@@ -112,7 +112,7 @@ export default {
 
 /* The Modal (background) */
 .modal {
-  //display: none; /* Hidden by default */
+  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 15; /* Sit on top */
   padding-top: 100px; /* Location of the box */
