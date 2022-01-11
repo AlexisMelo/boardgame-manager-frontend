@@ -1,5 +1,7 @@
 <template>
-  <button class="navButton" @click="createNewDeck">Add Deck</button>
+  <div>
+    <button class="navButton" @click="createNewDeck">Add Deck</button>
+  </div>
 </template>
 
 <script>

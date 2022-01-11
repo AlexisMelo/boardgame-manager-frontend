@@ -1,32 +1,34 @@
 <template>
-  <button class="navButton" @click="openModal">Add piece</button>
+  <div>
+    <button class="navButton" @click="openModal">Add piece</button>
 
-  <div id="createPieceModal" class="modal" @click.self="closeModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>Create piece</h2>
-      </div>
-      <div class="modal-body">
-        <div class="tabButtons">
-          <button id="buttonPieceTab" class="selected">Piece</button>
+    <div id="createPieceModal" class="modal" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Create piece</h2>
         </div>
+        <div class="modal-body">
+          <div class="tabButtons">
+            <button id="buttonPieceTab" class="selected">Piece</button>
+          </div>
 
-        <div id="PieceTab" class="tab">
-          <label>Image :</label>
-          <input
-            id="imagePiece"
-            accept="image/*"
-            name="faceFile"
-            type="file"
-            @change="updateImagePiece($event, index)"
-          />
+          <div id="PieceTab" class="tab">
+            <label>Image :</label>
+            <input
+                id="imagePiece"
+                accept="image/*"
+                name="faceFile"
+                type="file"
+                @change="updateImagePiece($event, index)"
+            />
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="navButton createButton" @click="createNewPiece">
-          Create the piece
-        </button>
+        <div class="modal-footer">
+          <button class="navButton createButton" @click="createNewPiece">
+            Create the piece
+          </button>
+        </div>
       </div>
     </div>
   </div>

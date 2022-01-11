@@ -4,7 +4,7 @@
       <img
         alt="Back to home page"
         class="homeButton"
-        src="@/assets/home.png"
+        src="@/assets/img/home.png"
         @click="backToHome()"
       />
       <div class="username">{{ this.username }}</div>
@@ -203,8 +203,8 @@ export default {
     },
     createNewCardImage() {
       let cardImage = new CardImage({
-        srcRecto: require("@/assets/ace_spade.png"),
-        srcVerso: require("@/assets/verso.png"),
+        srcRecto: require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
+        srcVerso: require("@/assets/img/to_delete_when_server_side_implemented/verso.png"),
         top: 200,
         left: 200,
       });
@@ -212,7 +212,7 @@ export default {
     },
     createNewPiece() {
       let piece = new Piece({
-        src: require("@/assets/hotel.png"),
+        src: require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
         left: 100,
         top: 100,
       });
@@ -235,10 +235,10 @@ export default {
     createNewDiceImage() {
       let diceImage = new DiceImage({
         listFace: [
-          require("@/assets/hotel.png"),
-          require("@/assets/ace_spade.png"),
-          require("@/assets/maison.png"),
-          require("@/assets/voiture.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/maison.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/voiture.png"),
         ],
       });
       this.canvas.add(diceImage);
@@ -309,7 +309,7 @@ h1 {
   padding: 5px;
 }
 
-.navbar > *:not(:first-child) {
+.navbar > * {
   margin-left: 20px;
 }
 

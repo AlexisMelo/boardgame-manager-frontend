@@ -1,42 +1,43 @@
 <template>
-  <button class="navButton" @click="openModal">Add dice</button>
+  <div>
+    <button class="navButton" @click="openModal">Add dice</button>
 
-  <div id="createDiceModal" class="modal" @click.self="closeModal">
+    <div id="createDiceModal" class="modal" @click.self="closeModal">
 
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>Create Dice</h2>
-      </div>
-      <div class="modal-body">
-        <div class="tabButtons">
-          <button id="buttonDiceNumberTab" class="selected" @click="openTab('DiceNumberTab')">Dice Number</button>
-          <button id="buttonDiceImageTab" @click="openTab('DiceImageTab')">Dice Image</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Create Dice</h2>
         </div>
-
-        <div id="DiceNumberTab" class="tab">
-          <label>Min number: </label><input id="min" v-model="min" type="number">
-          <label>Max number : </label><input id="max" v-model="max" type="number">
-        </div>
-
-        <div id="DiceImageTab" class="tab" style="display:none">
-          <div v-for="(face, index) in faces" :key="index">
-            <label :for="`face-${index}`">Face {{ index }}</label>
-            <input :id="`face-${index}`" accept="image/*" name="faceFile" type="file"
-                   @change="updateFace($event, index)">
-            <img v-if="face.src" :src="face.src" alt="zzz" height="50" width="50">
+        <div class="modal-body">
+          <div class="tabButtons">
+            <button id="buttonDiceNumberTab" class="selected" @click="openTab('DiceNumberTab')">Dice Number</button>
+            <button id="buttonDiceImageTab" @click="openTab('DiceImageTab')">Dice Image</button>
           </div>
-          <button @click="newFace">New face</button>
 
+          <div id="DiceNumberTab" class="tab">
+            <label>Min number: </label><input id="min" v-model="min" type="number">
+            <label>Max number : </label><input id="max" v-model="max" type="number">
+          </div>
+
+          <div id="DiceImageTab" class="tab" style="display:none">
+            <div v-for="(face, index) in faces" :key="index">
+              <label :for="`face-${index}`">Face {{ index }}</label>
+              <input :id="`face-${index}`" accept="image/*" name="faceFile" type="file"
+                     @change="updateFace($event, index)">
+              <img v-if="face.src" :src="face.src" alt="zzz" height="50" width="50">
+            </div>
+            <button @click="newFace">New face</button>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="navButton createButton" @click="createNewDice">Create the dice</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="navButton createButton" @click="createNewDice">Create the dice</button>
-      </div>
+
     </div>
-
   </div>
-
 </template>
 
 <script>

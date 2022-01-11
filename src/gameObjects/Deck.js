@@ -3,7 +3,7 @@ import {v4 as uuidv4} from "uuid";
 import {Menu} from "@/gameObjects/Menu";
 import {MenuItem} from "@/gameObjects/MenuItem";
 
-const img = require("../assets/defaultDeck.png");
+const img = require("../assets/img/to_delete_when_server_side_implemented/defaultDeck.png");
 
 export let Deck = fabric.util.createClass(fabric.Image, {
     type: "Deck",

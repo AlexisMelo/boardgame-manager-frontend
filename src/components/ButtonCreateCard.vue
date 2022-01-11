@@ -1,53 +1,55 @@
 <template>
-  <button class="navButton" @click="openModal">Add card</button>
+  <div>
+    <button class="navButton" @click="openModal">Add card</button>
 
-  <div id="createCardModal" class="modal" @click.self="closeModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>Create card</h2>
-      </div>
-      <div class="modal-body">
-        <div class="tabButtons">
-          <button
-            id="buttonCardTab"
-            class="selected"
-            @click="openTab('CardTab')"
-          >
-            Card
+    <div id="createCardModal" class="modal" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Create card</h2>
+        </div>
+        <div class="modal-body">
+          <div class="tabButtons">
+            <button
+                id="buttonCardTab"
+                class="selected"
+                @click="openTab('CardTab')"
+            >
+              Card
+            </button>
+            <button id="buttonCardImageTab" @click="openTab('CardImageTab')">
+              Card Image
+            </button>
+          </div>
+
+          <div id="CardTab" class="tab">
+            <p>Create a random card from a classic deck.</p>
+          </div>
+
+          <div id="CardImageTab" class="tab" style="display: none">
+            <label>Image face recto :</label>
+            <input
+                id="faceRecto"
+                accept="image/*"
+                name="faceFile"
+                type="file"
+                @change="updateFace($event, 'recto')"
+            />
+            <label>Image face verso :</label>
+            <input
+                id="faceVerso"
+                accept="image/*"
+                name="faceFile"
+                type="file"
+                @change="updateFace($event, 'verso')"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="navButton createButton" @click="createNewCard">
+            Create the card
           </button>
-          <button id="buttonCardImageTab" @click="openTab('CardImageTab')">
-            Card Image
-          </button>
         </div>
-
-        <div id="CardTab" class="tab">
-          <p>Create a random card from a classic deck.</p>
-        </div>
-
-        <div id="CardImageTab" class="tab" style="display: none">
-          <label>Image face recto :</label>
-          <input
-            id="faceRecto"
-            accept="image/*"
-            name="faceFile"
-            type="file"
-            @change="updateFace($event, 'recto')"
-          />
-          <label>Image face verso :</label>
-          <input
-            id="faceVerso"
-            accept="image/*"
-            name="faceFile"
-            type="file"
-            @change="updateFace($event, 'verso')"
-          />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="navButton createButton" @click="createNewCard">
-          Create the card
-        </button>
       </div>
     </div>
   </div>

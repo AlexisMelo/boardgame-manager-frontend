@@ -168,7 +168,7 @@ export default {
 };
 
 function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
-  let icon = require("@/assets/plus.png");
+  let icon = require("@/assets/img/plus.png");
   let img = document.createElement("img");
   img.src = icon;
 
