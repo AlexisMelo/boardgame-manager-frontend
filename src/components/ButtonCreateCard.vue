@@ -23,31 +23,34 @@
 
         <div id="CardTab" class="tab">
           <p>Create a random card from a classic deck.</p>
+          <div class="modal-footer">
+            <button class="navButton createButton" @click="createNewCard">
+              Create the card
+            </button>
+          </div>
         </div>
 
         <div id="CardImageTab" class="tab" style="display: none">
           <label>Image face recto :</label>
           <input
             id="faceRecto"
-            accept="image/*"
             name="faceFile"
-            type="file"
+            type="text"
             @change="updateFace($event, 'recto')"
           />
           <label>Image face verso :</label>
           <input
             id="faceVerso"
-            accept="image/*"
             name="faceFile"
-            type="file"
+            type="text"
             @change="updateFace($event, 'verso')"
           />
+          <div class="modal-footer">
+            <button class="navButton createButton" @click="createImageCard">
+              Create the card
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="navButton createButton" @click="createNewCard">
-          Create the card
-        </button>
       </div>
     </div>
   </div>
@@ -55,6 +58,7 @@
 
 <script>
 import { Card } from "@/gameObjects/Card";
+import { CardImage } from "@/gameObjects/CardImage";
 
 export default {
   emits: ["new"],
@@ -74,13 +78,13 @@ export default {
     updateFace(event, face) {
       if (face === "recto") {
         this.faceRecto = {
-          file: event.target.files[0],
-          src: URL.createObjectURL(event.target.files[0]),
+          file: event.target.value,
+          src: event.target.value,
         };
       } else {
         this.faceVerso = {
-          file: event.target.files[0],
-          src: URL.createObjectURL(event.target.files[0]),
+          file: event.target.value,
+          src: event.target.value,
         };
       }
     },
@@ -100,6 +104,14 @@ export default {
     },
     openModal() {
       this.modal.style.display = "block";
+    },
+    createImageCard() {
+      const card = new CardImage({
+        srcRecto: this.faceRecto.src,
+        srcVerso: this.faceVerso.src,
+      });
+      this.$emit("new", card);
+      console.log("CARTE", card);
     },
     createNewCard() {
       let figures = [
