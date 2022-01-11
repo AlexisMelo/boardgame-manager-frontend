@@ -35,7 +35,8 @@ export let Image = fabric.util.createClass(fabric.Image, {
     toObject: function () {
         return fabric.util.object.extend(this.callSuper("toObject"), {
             src: this.get("src"),
-            label: this.get("label")
+            label: this.get("label"),
+            id: this.get("id")
         })
     },
 })

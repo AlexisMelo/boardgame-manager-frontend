@@ -65,7 +65,6 @@ export default {
       modal.openModal(this.modal)
     },
     createNewImage() {
-      console.log(monopolyBoard)
       let images = [
         new Image({
           src: monopolyBoard,

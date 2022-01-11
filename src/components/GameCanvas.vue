@@ -124,6 +124,11 @@ export default {
       // we'll pull out the object and id from the data object the socket emitted
       let object_duplicate;
 
+      if (!objectToAdd.id) {
+        console.log(objectToAdd)
+        return;
+      }
+
       switch (objectToAdd.type) {
         case "Card":
           object_duplicate = new Card(objectToAdd);
@@ -149,8 +154,9 @@ export default {
       }
 
       if (object_duplicate) {
+        object_duplicate.dirty = true
         this.canvas.add(object_duplicate);
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       }
     },
     updateObject(objectToUpdate) {
