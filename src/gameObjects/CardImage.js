@@ -55,7 +55,7 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
   },
 
   getMenu: function (canvas) {
-    return new Menu([
+    const menu = new Menu([
       new MenuItem("Return", () => {
         this.turn();
         canvas.requestRenderAll();
@@ -73,6 +73,33 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
         canvas.requestRenderAll();
       }, "http://share.pacary.net/PAO/icone/turnLeft.svg"),
     ]);
+    if (this.isDeckIntersection(canvas)) {
+      const thisCard = this;
+      menu.add(
+        new MenuItem("Add to Deck", () => {
+          this.getDeckIntersection(canvas).addToDeck(thisCard);
+          canvas.discardActiveObject().renderAll();
+          canvas.remove(thisCard);
+        }, "http://share.pacary.net/PAO/icone/card-add.svg")
+      );
+    }
+    return menu;
+  },
+
+  getDeckIntersection: function (canvas) {
+    let intersection = undefined;
+    this.setCoords();
+    const card = this;
+    canvas.forEachObject(function (obj) {
+      if (obj === card) return;
+      if (obj.type === "Deck" && card.intersectsWithObject(obj)) {
+        intersection = obj;
+      }
+    });
+    return intersection;
+  },
+  isDeckIntersection: function (canvas) {
+    return this.getDeckIntersection(canvas) !== undefined;
   },
 
   onDeseleced: function (canvas) {
