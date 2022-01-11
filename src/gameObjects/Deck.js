@@ -2,6 +2,7 @@ import {fabric} from "fabric";
 import {v4 as uuidv4} from "uuid";
 import {Menu} from "@/gameObjects/Menu";
 import {MenuItem} from "@/gameObjects/MenuItem";
+
 const img = require("../assets/defaultDeck.png");
 
 export let Deck = fabric.util.createClass(fabric.Image, {
