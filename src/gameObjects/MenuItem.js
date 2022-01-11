@@ -2,7 +2,10 @@ export const MenuItem = function (label, callback, image = "https://bassets.gith
     this.label = label
     this.callback = callback
     this.htmlTag = undefined
-    this.image = image
+    if (image === undefined)
+        this.image = "https://bassets.github.io/img.svg"
+    else
+        this.image = image
 }
 
 //x du click
@@ -15,9 +18,9 @@ MenuItem.prototype.style = function (x, y, nb, total) {
         "position": "fixed",
         "top": `${y}px`,
         "left": `${x}px`,
+        'padding': `${this.getSize() / 2}px`,
         'width': `${this.getSize()}px`,
         'height': `${this.getSize()}px`,
-        'padding': `${this.getSize() / 2}px`,
         "border-radius": "50%",
         "background": `url("${this.image}") no-repeat 50%/50%#e8e8f3`,
         "box-shadow": "7px 7px 15px rgba(55, 84, 170, 0.15), -2px -2px 20px white, inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0)"
@@ -63,8 +66,6 @@ MenuItem.prototype.getCoordonne = function (nbMenuItem, total) {
 MenuItem.prototype.render = function (nbMenuItem, total, x, y) {
 
     this.htmlTag = document.createElement("div");
-    //const label = document.createTextNode(this.label);
-    //this.htmlTag.appendChild(label);
     this.htmlTag.oncontextmenu = (e) => {
         e.preventDefault()
     }

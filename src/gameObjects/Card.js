@@ -47,7 +47,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
                     this.getDeckIntersection(canvas).addToDeck(thisCard);
                     canvas.discardActiveObject().renderAll();
                     canvas.remove(thisCard);
-                })
+                }, "http://share.pacary.net/PAO/icone/card-add.svg")
             );
         }
         return menu;
