@@ -13,6 +13,8 @@ import { Piece } from "@/gameObjects/Piece";
 import { DiceNumber } from "@/gameObjects/DiceNumber";
 import { CardImage } from "@/gameObjects/CardImage";
 import { DiceImage } from "@/gameObjects/DiceImage";
+import { Image } from "@/gameObjects/Image";
+import { Deck } from "@/gameObjects/Deck";
 
 export default {
   name: "FabricCanvas",
@@ -137,6 +139,12 @@ export default {
           break;
         case "DiceImage":
           object_duplicate = new DiceImage(objectToAdd);
+          break;
+        case "Deck":
+          object_duplicate = new Deck(objectToAdd);
+          break;
+        case "Image":
+          object_duplicate = new Image(objectToAdd);
           break;
       }
 

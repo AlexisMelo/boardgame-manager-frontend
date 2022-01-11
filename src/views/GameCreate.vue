@@ -13,6 +13,7 @@
       <ButtonCreateCard @newItem="newItem" />
       <ButtonCreatePiece @newItem="newItem" />
       <ButtonCreateDeck @newItem="newItem" />
+      <ButtonCreateImage @newItem="newItem" />
 
       <button class="save" @click="save">Save</button>
       <button class="upload" @click="upload">Upload</button>
@@ -39,6 +40,7 @@ import ButtonCreateDice from "@/components/ButtonCreateDice";
 import ButtonCreateCard from "@/components/ButtonCreateCard";
 import ButtonCreatePiece from "@/components/ButtonCreatePiece";
 import ButtonCreateDeck from "@/components/ButtonCreateDeck";
+import ButtonCreateImage from "@/components/ButtonCreateImage";
 
 export default {
   name: "GameCreate",
@@ -47,6 +49,7 @@ export default {
     ButtonCreateCard,
     ButtonCreatePiece,
     ButtonCreateDeck,
+    ButtonCreateImage
   },
   mixins: [canvasMixin],
   data() {
@@ -238,7 +241,7 @@ export default {
           require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
           require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
           require("@/assets/img/to_delete_when_server_side_implemented/monopoly/maison.png"),
-          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/voiture.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"),
         ],
       });
       this.canvas.add(diceImage);

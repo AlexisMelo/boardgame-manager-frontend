@@ -9,7 +9,6 @@ export let Deck = fabric.util.createClass(fabric.Image, {
     type: "Deck",
     height: 170,
     width: 120,
-    label: "Deck",
     list: [],
     defaultSrc: img,
     alt: "deck",
@@ -21,7 +20,6 @@ export let Deck = fabric.util.createClass(fabric.Image, {
             height: options.height || this.height,
             width: options.width || this.width,
             id: options.id || uuidv4(),
-            label: options.label || this.label,
             src: options.src || this.defaultSrc,
             alt: options.alt || this.alt
         })
@@ -29,8 +27,6 @@ export let Deck = fabric.util.createClass(fabric.Image, {
         let imageElement = document.createElement("img")
         imageElement.src = this.src
         imageElement.alt = this.alt
-
-        console.log(imageElement)
 
         options.width = this.width
         options.height = this.height
@@ -97,7 +93,7 @@ export let Deck = fabric.util.createClass(fabric.Image, {
 
     toObject: function () {
         return fabric.util.object.extend(this.callSuper("toObject"), {
-            label: this.get("label"),
+            src: this.get("src"),
         });
     },
 

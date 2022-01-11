@@ -2,6 +2,7 @@ import { fabric } from "fabric";
 import { v4 as uuidv4 } from "uuid";
 import { Menu } from "@/gameObjects/Menu";
 import { MenuItem } from "@/gameObjects/MenuItem";
+import fabricUtils from "@/assets/js/fabricUtils";
 
 export let Card = fabric.util.createClass(fabric.Rect, {
     type: "Card",
@@ -10,7 +11,6 @@ export let Card = fabric.util.createClass(fabric.Rect, {
     defaultFill: "#e9c46a",
     fill: "#E4E5E5",
     defaultLabel: "Carte vide",
-    id: "default_id",
 
     initialize: function (options) {
         options || (options = {});
@@ -22,16 +22,7 @@ export let Card = fabric.util.createClass(fabric.Rect, {
             fill: options.fill || this.defaultFill,
             id: options.id || uuidv4(),
         });
-        this.setControlsVisibility({
-            tr: false,
-            tl: false,
-            br: false,
-            bl: false,
-            ml: false,
-            mt: false,
-            mr: false,
-            mb: false,
-        });
+        fabricUtils.hideControls(this)
     },
 
     getMenu: function (canvas) {
