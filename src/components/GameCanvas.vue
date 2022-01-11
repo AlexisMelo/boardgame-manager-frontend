@@ -13,7 +13,7 @@ import { Piece } from "@/gameObjects/Piece";
 import { DiceNumber } from "@/gameObjects/DiceNumber";
 import { CardImage } from "@/gameObjects/CardImage";
 import { DiceImage } from "@/gameObjects/DiceImage";
-import { Image } from "@/gameObjects/Image";
+import { ImageApp } from "@/gameObjects/ImageApp";
 import { Deck } from "@/gameObjects/Deck";
 
 export default {
@@ -149,7 +149,7 @@ export default {
           object_duplicate = new Deck(objectToAdd);
           break;
         case "Image":
-          object_duplicate = new Image(objectToAdd);
+          object_duplicate = new ImageApp(objectToAdd);
           break;
       }
 
