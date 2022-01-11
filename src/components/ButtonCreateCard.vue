@@ -107,11 +107,11 @@ export default {
     },
     createImageCard() {
       const card = new CardImage({
-        srcRecto: this.faceRecto,
-        srcVerso: this.faceVerso,
+        srcRecto: this.faceRecto.src,
+        srcVerso: this.faceVerso.src,
       });
-      this.$emit("new", card);
-      console.log(card);
+      this.$emit("newItem", card);
+      console.log("CARTE", card);
     },
     createNewCard() {
       let figures = [
@@ -136,7 +136,7 @@ export default {
         }`,
         left: 200,
       });
-      this.$emit("new", card);
+      this.$emit("newItem", card);
     },
   },
 };
