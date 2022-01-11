@@ -16,7 +16,13 @@
       <ButtonCreateImage @newItem="newItem" />
 
       <button class="save" @click="save">Save</button>
-      <button class="upload" @click="upload">Upload</button>
+      <label class="upload" for="uploadInput" >Upload</label>
+      <input
+          id="uploadInput"
+          accept="application/json"
+          type="file"
+          @change="upload"
+      />
     </div>
     <canvas id="canvas"></canvas>
     <button class="startGameButton" @click="postCreateRoom">
@@ -154,8 +160,21 @@ export default {
       element.click();
       document.body.removeChild(element);
     },
-    upload() {
-      alert("marche po");
+    upload(event) {
+      try {
+        let file = event.target.files[0]
+        let fr = new FileReader()
+        fr.onloadend = (loadedEvent) => {
+          let objects = JSON.parse(loadedEvent.target.result)
+          this.$toast.success("Items loaded successfully")
+          for (const obj of objects.canvasObjects) {
+            this.addObjectToCanvas(this.canvas, obj)
+          }
+        }
+        fr.readAsText(file)
+      } catch(e) {
+        this.$toast.error("Error when loading items")
+      }
     },
     backToHome() {
       this.$router.push("/");
@@ -352,5 +371,9 @@ h1 {
 .startGameButton:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+#uploadInput {
+  display: none;
 }
 </style>

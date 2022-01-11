@@ -1,4 +1,11 @@
 import { fabric } from "fabric";
+import {Card} from "@/gameObjects/Card";
+import {Piece} from "@/gameObjects/Piece";
+import {DiceNumber} from "@/gameObjects/DiceNumber";
+import {CardImage} from "@/gameObjects/CardImage";
+import {DiceImage} from "@/gameObjects/DiceImage";
+import {Deck} from "@/gameObjects/Deck";
+import {ImageApp} from "@/gameObjects/ImageApp";
 
 export const canvasMixin = {
     methods: {
@@ -65,6 +72,47 @@ export const canvasMixin = {
             let height = window.innerHeight > 0 ? window.innerHeight : screen.height;
             canvas.setWidth(width);
             canvas.setHeight(height);
+        },
+        addObjectToCanvas(canvas, objectToAdd) {
+            // we'll pull out the object and id from the data object the socket emitted
+            let object_duplicate;
+
+            if (!objectToAdd.id) {
+                return; //éviter doublons parfois ou autre bug
+            }
+
+            switch (objectToAdd.type) {
+                case "Card":
+                    object_duplicate = new Card(objectToAdd);
+                    break;
+                case "Piece":
+                    object_duplicate = new Piece(objectToAdd);
+                    break;
+                case "DiceNumber":
+                    object_duplicate = new DiceNumber(objectToAdd);
+                    break;
+                case "CardImage":
+                    object_duplicate = new CardImage(objectToAdd);
+                    break;
+                case "DiceImage":
+                    object_duplicate = new DiceImage(objectToAdd);
+                    break;
+                case "Deck":
+                    object_duplicate = new Deck(objectToAdd);
+                    break;
+                case "ImageApp":
+                    fabric.util.loadImage(objectToAdd.src, (img) => {
+                        object_duplicate = new ImageApp(img, objectToAdd);
+                        this.canvas.add(object_duplicate)
+                        this.canvas.requestRenderAll();
+                    })
+                    break;
+            }
+
+            if (object_duplicate) {
+                this.canvas.add(object_duplicate);
+                this.canvas.requestRenderAll();
+            }
         }
     }
 }

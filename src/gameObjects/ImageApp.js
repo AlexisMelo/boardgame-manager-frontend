@@ -15,7 +15,7 @@ export let ImageApp = fabric.util.createClass(fabric.Image, {
             height: options.height || 500,
             id: options.id || uuidv4(),
             alt: options.alt || "Image for the game",
-            src: options.src || img,
+            src: element.src || img,
             label: options.label || "Image"
         })
     },

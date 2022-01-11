@@ -7,14 +7,8 @@
 <script>
 import { fabric } from "fabric";
 
-import { Card } from "@/gameObjects/Card";
 import { canvasMixin } from "@/mixins/canvasMixin";
-import { Piece } from "@/gameObjects/Piece";
-import { DiceNumber } from "@/gameObjects/DiceNumber";
-import { CardImage } from "@/gameObjects/CardImage";
-import { DiceImage } from "@/gameObjects/DiceImage";
-import { ImageApp } from "@/gameObjects/ImageApp";
-import { Deck } from "@/gameObjects/Deck";
+
 
 export default {
   name: "FabricCanvas",
@@ -121,43 +115,7 @@ export default {
       });
     },
     addObject(objectToAdd) {
-      // we'll pull out the object and id from the data object the socket emitted
-      let object_duplicate;
-
-      if (!objectToAdd.id) {
-        console.log(objectToAdd)
-        return;
-      }
-
-      switch (objectToAdd.type) {
-        case "Card":
-          object_duplicate = new Card(objectToAdd);
-          break;
-        case "Piece":
-          object_duplicate = new Piece(objectToAdd);
-          break;
-        case "DiceNumber":
-          object_duplicate = new DiceNumber(objectToAdd);
-          break;
-        case "CardImage":
-          object_duplicate = new CardImage(objectToAdd);
-          break;
-        case "DiceImage":
-          object_duplicate = new DiceImage(objectToAdd);
-          break;
-        case "Deck":
-          object_duplicate = new Deck(objectToAdd);
-          break;
-        case "Image":
-          object_duplicate = new ImageApp(objectToAdd);
-          break;
-      }
-
-      if (object_duplicate) {
-        object_duplicate.dirty = true
-        this.canvas.add(object_duplicate);
-        this.canvas.requestRenderAll();
-      }
+      this.addObjectToCanvas(this.canvas, objectToAdd)
     },
     updateObject(objectToUpdate) {
       // check the objects on our canvas for one with a matching id
