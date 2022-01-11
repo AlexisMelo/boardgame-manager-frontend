@@ -34,14 +34,15 @@
 </template>
 
 <script>
-import { Image } from "@/gameObjects/Image";
+import { ImageApp } from "@/gameObjects/ImageApp";
+import {fabric} from "fabric";
 
 import modal from "@/assets/js/modal";
-const monopolyBoard = require("../assets/img/to_delete_when_server_side_implemented/monopoly/monopoly-classique-plateau.jpg")
+/*const monopolyBoard = require("../assets/img/to_delete_when_server_side_implemented/monopoly/monopoly-classique-plateau.jpg")
 const brouette = require("../assets/img/to_delete_when_server_side_implemented/monopoly/pions/brouette.png")
 const chapeau = require("../assets/img/to_delete_when_server_side_implemented/monopoly/pions/chapeau.png")
 const de_a_coudre = require("../assets/img/to_delete_when_server_side_implemented/monopoly/pions/de_a_coudre.png")
-const voiture = require("../assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png")
+const voiture = require("../assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png")*/
 
 export default {
   emits: ["newItem"],
@@ -65,46 +66,32 @@ export default {
       modal.openModal(this.modal)
     },
     createNewImage() {
-      let images = [
-        new Image({
-          src: monopolyBoard,
-          width: 1241,
-          height: 1241
-        }),
-        new Image({
-          src: voiture,
-          width: 100,
-          height: 56,
-          top: 100,
-          left: 800
-        }),
-        new Image({
-          src: brouette,
-          width: 100,
-          height: 71,
-          top: 100,
-          left: 600
-        }),
-        new Image({
-          src: de_a_coudre,
-          width: 100,
-          height: 135,
-          top: 100,
-          left: 400
-        }),
-        new Image({
-          src: chapeau,
-          width: 100,
-          height: 80,
-          top: 100,
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/monopoly-classique-plateau.jpg"), (img) => {
+        let imageApp = new ImageApp(img)
+        this.$emit("newItem", imageApp)
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/brouette.png"), (img) => {
+        let imageApp = new ImageApp(img)
+        this.$emit("newItem", imageApp)
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"), (img) => {
+        let imageApp = new ImageApp(img, {
           left: 200
         })
-
-      ]
-
-      for (const img of images) {
-        this.$emit("newItem", img)
-      }
+        this.$emit("newItem", imageApp)
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/de_a_coudre.png"), (img) => {
+        let imageApp = new ImageApp(img, {
+          left: 300
+        })
+        this.$emit("newItem", imageApp)
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/chapeau.png"), (img) => {
+        let imageApp = new ImageApp(img, {
+          left: 400
+        })
+        this.$emit("newItem", imageApp)
+      })
     }
   }
 }
