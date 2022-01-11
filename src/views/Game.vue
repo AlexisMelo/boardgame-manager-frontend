@@ -1,7 +1,7 @@
 <template>
   <div class="game">
     <div class="navbar">
-      <img alt="Back to home page" class="homeButton" src="@/assets/home.png" @click="backToHome()"/>
+      <img alt="Back to home page" class="homeButton" src="@/assets/img/home.png" @click="backToHome()"/>
       <div class="username">{{ this.username }}</div>
     </div>
     <GameCanvas :room="room" :socket="socket"/>

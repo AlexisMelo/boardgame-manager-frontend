@@ -4,16 +4,16 @@
       <img
         alt="Back to home page"
         class="homeButton"
-        src="@/assets/home.png"
+        src="@/assets/img/home.png"
         @click="backToHome()"
       />
       <div class="username">{{ this.username }}</div>
 
-      <ButtonCreateDice @new="newItem" />
-      <ButtonCreateCard @new="newItem" />
-      <ButtonCreatePiece @new="newItem" />
-      <ButtonCreateDeck @new="newItem" />
-      <!-- <button class="navButton" @click="createNewDeck">Add deck</button> -->
+      <ButtonCreateDice @newItem="newItem" />
+      <ButtonCreateCard @newItem="newItem" />
+      <ButtonCreatePiece @newItem="newItem" />
+      <ButtonCreateDeck @newItem="newItem" />
+      <ButtonCreateImage @newItem="newItem" />
 
       <button class="save" @click="save">Save</button>
       <button class="upload" @click="upload">Upload</button>
@@ -40,6 +40,7 @@ import ButtonCreateDice from "@/components/ButtonCreateDice";
 import ButtonCreateCard from "@/components/ButtonCreateCard";
 import ButtonCreatePiece from "@/components/ButtonCreatePiece";
 import ButtonCreateDeck from "@/components/ButtonCreateDeck";
+import ButtonCreateImage from "@/components/ButtonCreateImage";
 
 export default {
   name: "GameCreate",
@@ -48,6 +49,7 @@ export default {
     ButtonCreateCard,
     ButtonCreatePiece,
     ButtonCreateDeck,
+    ButtonCreateImage
   },
   mixins: [canvasMixin],
   data() {
@@ -123,8 +125,6 @@ export default {
         this.canvas.renderAll();
       }
     });
-
-    this.canvas.add(new Deck());
   },
   methods: {
     newItem(item) {
@@ -206,8 +206,8 @@ export default {
     },
     createNewCardImage() {
       let cardImage = new CardImage({
-        srcRecto: require("@/assets/ace_spade.png"),
-        srcVerso: require("@/assets/verso.png"),
+        srcRecto: require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
+        srcVerso: require("@/assets/img/to_delete_when_server_side_implemented/verso.png"),
         top: 200,
         left: 200,
       });
@@ -215,7 +215,7 @@ export default {
     },
     createNewPiece() {
       let piece = new Piece({
-        src: require("@/assets/hotel.png"),
+        src: require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
         left: 100,
         top: 100,
       });
@@ -238,10 +238,10 @@ export default {
     createNewDiceImage() {
       let diceImage = new DiceImage({
         listFace: [
-          require("@/assets/hotel.png"),
-          require("@/assets/ace_spade.png"),
-          require("@/assets/maison.png"),
-          require("@/assets/voiture.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/maison.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"),
         ],
       });
       this.canvas.add(diceImage);
@@ -312,7 +312,7 @@ h1 {
   padding: 5px;
 }
 
-.navbar > *:not(:first-child) {
+.navbar > * {
   margin-left: 20px;
 }
 

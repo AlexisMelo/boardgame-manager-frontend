@@ -13,6 +13,8 @@ import { Piece } from "@/gameObjects/Piece";
 import { DiceNumber } from "@/gameObjects/DiceNumber";
 import { CardImage } from "@/gameObjects/CardImage";
 import { DiceImage } from "@/gameObjects/DiceImage";
+import { Image } from "@/gameObjects/Image";
+import { Deck } from "@/gameObjects/Deck";
 
 export default {
   name: "FabricCanvas",
@@ -122,6 +124,11 @@ export default {
       // we'll pull out the object and id from the data object the socket emitted
       let object_duplicate;
 
+      if (!objectToAdd.id) {
+        console.log(objectToAdd)
+        return;
+      }
+
       switch (objectToAdd.type) {
         case "Card":
           object_duplicate = new Card(objectToAdd);
@@ -138,11 +145,18 @@ export default {
         case "DiceImage":
           object_duplicate = new DiceImage(objectToAdd);
           break;
+        case "Deck":
+          object_duplicate = new Deck(objectToAdd);
+          break;
+        case "Image":
+          object_duplicate = new Image(objectToAdd);
+          break;
       }
 
       if (object_duplicate) {
+        object_duplicate.dirty = true
         this.canvas.add(object_duplicate);
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       }
     },
     updateObject(objectToUpdate) {
@@ -168,7 +182,7 @@ export default {
 };
 
 function renderAddToDeckIcon(ctx, left, top, styleOverride, fabricObject) {
-  let icon = require("@/assets/plus.png");
+  let icon = require("@/assets/img/plus.png");
   let img = document.createElement("img");
   img.src = icon;
 
