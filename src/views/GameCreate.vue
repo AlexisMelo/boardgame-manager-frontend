@@ -9,11 +9,10 @@
       />
       <div class="username">{{ this.username }}</div>
 
-      <ButtonCreateDice @new="newItem" />
-      <ButtonCreateCard @new="newItem" />
-      <ButtonCreatePiece @new="newItem" />
-      <ButtonCreateDeck @new="newItem" />
-      <!-- <button class="navButton" @click="createNewDeck">Add deck</button> -->
+      <ButtonCreateDice @newItem="newItem" />
+      <ButtonCreateCard @newItem="newItem" />
+      <ButtonCreatePiece @newItem="newItem" />
+      <ButtonCreateDeck @newItem="newItem" />
 
       <button class="save" @click="save">Save</button>
       <button class="upload" @click="upload">Upload</button>
@@ -123,8 +122,6 @@ export default {
         this.canvas.renderAll();
       }
     });
-
-    this.canvas.add(new Deck());
   },
   methods: {
     newItem(item) {

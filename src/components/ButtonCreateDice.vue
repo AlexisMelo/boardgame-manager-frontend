@@ -43,7 +43,7 @@
 import {DiceNumber} from "@/gameObjects/DiceNumber";
 
 export default {
-  emits: ["new"],
+  emits: ["newItem"],
   name: "ButtonCreateDice",
   data: function () {
     return {
@@ -89,7 +89,7 @@ export default {
           min: this.min,
           max: this.max,
         })
-        this.$emit("new", dice)
+        this.$emit("newItem", dice)
       }
 
       if (this.faces) {
