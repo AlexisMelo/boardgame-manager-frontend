@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export let CardImage = fabric.util.createClass(fabric.Image, {
   type: "CardImage",
-  src: null,
 
   initialize: function (element, options) {
     options || (options = {});
