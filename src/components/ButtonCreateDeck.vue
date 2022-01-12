@@ -6,6 +6,7 @@
 
 <script>
 import { Deck } from "@/gameObjects/Deck";
+import {fabric} from "fabric";
 
 export default {
   emits: ["newItem"],
@@ -20,11 +21,13 @@ export default {
   mounted() {},
   methods: {
     createNewDeck() {
-      let deck = new Deck({
-        left: 100,
-        top: 100,
-      });
-      this.$emit("newItem", deck);
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/defaultDeck.png"), (img) => {
+        let deck = new Deck(img,  {
+          left: 100,
+          top: 100
+        })
+        this.$emit("newItem", deck);
+      })
     },
   },
 };

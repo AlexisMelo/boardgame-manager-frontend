@@ -2,6 +2,7 @@ import { fabric } from "fabric";
 import { v4 as uuidv4 } from "uuid";
 import { Menu } from "@/gameObjects/Menu";
 import { MenuItem } from "@/gameObjects/MenuItem";
+import { canvasMixin } from "@/mixins/canvasMixin";
 
 const img = require("../assets/img/to_delete_when_server_side_implemented/defaultDeck.png");
 
@@ -14,26 +15,20 @@ export let Deck = fabric.util.createClass(fabric.Image, {
   defaultSrc: img,
   alt: "deck",
 
-  initialize: function (options) {
+  initialize: function (element, options) {
     options || (options = {});
-
+    options.width = options.width || element.width
+    options.height = options.height || element.height
+    this.callSuper("initialize", element, options)
     this.set({
-      height: options.height || this.height,
-      width: options.width || this.width,
       id: options.id || uuidv4(),
-      src: options.src || this.defaultSrc,
-      alt: options.alt || this.alt
+      alt: element.alt || "Deck",
+      src: element.src || img,
+      label: options.label || "Unnamed deck",
+      list: []
     })
-
-    let imageElement = document.createElement("img")
-    imageElement.src = this.src
-    imageElement.alt = this.alt
-
-    options.width = this.width
-    options.height = this.height
-
-    this.callSuper("initialize", imageElement, options);
   },
+
   getImageCount: function () {
     let icone;
     if (this.list.length < 10) {
@@ -60,10 +55,11 @@ export let Deck = fabric.util.createClass(fabric.Image, {
       new MenuItem(`${currentList.length} card${currentList.length > 1 ? "s" : ""}`, () => {
       }, this.getImageCount()),
       new MenuItem(`Tirer la carte du dessus`, () => {
-        this.getTopCard(canvas)
+        if (currentList.length > 0)
+          canvasMixin.methods.addObjectToCanvas(canvas, this.getTopCard(canvas))
       }, "http://share.pacary.net/PAO/icone/card-draw-top.svg"),
       new MenuItem(`Tirer la carte du dessous`, () => {
-        this.getBottomCard(canvas)
+        canvasMixin.methods.addObjectToCanvas(canvas, this.getBottomCard(canvas))
       }, "http://share.pacary.net/PAO/icone/card-draw-bottom.svg"),
       new MenuItem(`Tirer une carte aléatoire`, () => {
         if (currentList.length > 0) {
@@ -128,6 +124,7 @@ export let Deck = fabric.util.createClass(fabric.Image, {
   newRandomIndex: function () {
     return Math.floor(Math.random() * this.list.length);
   },
+
   onDeseleced: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
@@ -138,6 +135,7 @@ export let Deck = fabric.util.createClass(fabric.Image, {
       this.getMenu(canvas).openMenu(true, e.pointer.x, e.pointer.y);
     }
   },
+
   onMoving: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
@@ -154,6 +152,9 @@ export let Deck = fabric.util.createClass(fabric.Image, {
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
       src: this.get("src"),
+      label: this.get("label"),
+      id: this.get("id"),
+      list: this.get("list")
     });
   },
 
