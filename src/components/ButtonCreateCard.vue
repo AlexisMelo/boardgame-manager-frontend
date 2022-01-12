@@ -1,58 +1,60 @@
 <template>
-  <button class="navButton" @click="openModal">Add card</button>
+  <div>
+    <button class="navButton" @click="openModal">Add card</button>
 
-  <div id="createCardModal" class="modal" @click.self="closeModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>Create card</h2>
-      </div>
-      <div class="modal-body">
-        <div class="tabButtons">
-          <button
-            id="buttonCardTab"
-            class="selected"
-            @click="openTab('CardTab')"
-          >
-            Card
-          </button>
-          <button id="buttonCardImageTab" @click="openTab('CardImageTab')">
-            Card Image
-          </button>
+    <div id="createCardModal" class="modal" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Create card</h2>
         </div>
+        <div class="modal-body">
+          <div class="tabButtons">
+            <button
+                id="buttonCardTab"
+                class="selected"
+                @click="openTab('CardTab')"
+            >
+              Card
+            </button>
+            <button id="buttonCardImageTab" @click="openTab('CardImageTab')">
+              Card Image
+            </button>
+          </div>
 
-        <div id="CardTab" class="tab">
-          <p>Create a random card from a classic deck.</p>
-          <button class="navButton createButton" @click="createNewCard">
+          <div id="CardTab" class="tab">
+            <p>Create a random card from a classic deck.</p>
+            <button class="navButton createButton" @click="createNewCard">
+              Create the card
+            </button>
+          </div>
+
+          <div id="CardImageTab" class="tab" style="display: none">
+            <label>Image face recto :</label>
+            <input
+                id="faceRecto"
+                name="faceFile"
+                type="text"
+                @change="updateFace($event, 'recto')"
+            />
+            <label>Image face verso :</label>
+            <input
+                id="faceVerso"
+                name="faceFile"
+                type="text"
+                @change="updateFace($event, 'verso')"
+            />
+            <button class="navButton createButton" @click="createImageCard">
+              Create the card
+            </button>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!--button class="navButton createButton" @click="createImageCard">
             Create the card
-          </button>
+          </button-->
         </div>
-
-        <div id="CardImageTab" class="tab" style="display: none">
-          <label>Image face recto :</label>
-          <input
-            id="faceRecto"
-            name="faceFile"
-            type="text"
-            @change="updateFace($event, 'recto')"
-          />
-          <label>Image face verso :</label>
-          <input
-            id="faceVerso"
-            name="faceFile"
-            type="text"
-            @change="updateFace($event, 'verso')"
-          />
-          <button class="navButton createButton" @click="createImageCard">
-            Create the card
-          </button>
-
-        </div>
-      </div>
-      <div class="modal-footer">
-        <!--button class="navButton createButton" @click="createImageCard">
-          Create the card
-        </button-->
       </div>
     </div>
   </div>
@@ -61,6 +63,7 @@
 <script>
 import { Card } from "@/gameObjects/Card";
 import { CardImage } from "@/gameObjects/CardImage";
+import { fabric } from "fabric";
 
 export default {
   emits: ["new"],
@@ -108,12 +111,20 @@ export default {
       this.modal.style.display = "block";
     },
     createImageCard() {
-      const card = new CardImage({
-        srcRecto: this.faceRecto.src,
-        srcVerso: this.faceVerso.src,
-      });
-      this.$emit("newItem", card);
-      console.log("CARTE", card);
+      for (let i = 1; i < 29; i++) {
+        console.log(i)
+        fabric.util.loadImage(
+            require(`@/assets/img/to_delete_when_server_side_implemented/monopoly/proprietes/p${i}.png`),
+            (imgRecto) => {
+              fabric.util.loadImage(require('@/assets/img/to_delete_when_server_side_implemented/verso.png'), (imgVerso) => {
+                this.$emit("newItem", new CardImage(imgRecto, {
+                  srcRecto: imgRecto.src,
+                  srcVerso: imgVerso.src,
+                }))
+              })
+            }
+        );
+      }
     },
     createNewCard() {
       let figures = [

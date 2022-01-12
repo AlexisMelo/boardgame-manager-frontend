@@ -90,7 +90,9 @@ export const canvasMixin = {
                     this._addToCanvas(new DiceNumber(objectToAdd));
                     break;
                 case "CardImage":
-                    this._addToCanvas(new CardImage(objectToAdd));
+                    fabric.util.loadImage(objectToAdd.src, (img) => {
+                        this._addToCanvas(canvas, new CardImage(img, objectToAdd));
+                    })
                     break;
                 case "DiceImage":
                     this._addToCanvas(new DiceImage(objectToAdd));

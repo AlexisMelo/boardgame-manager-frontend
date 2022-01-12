@@ -134,7 +134,6 @@ export default {
   },
   methods: {
     newItem(item) {
-      console.log(item);
       this.canvas.add(item);
       this.canvas.requestRenderAll();
     },

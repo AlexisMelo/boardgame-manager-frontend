@@ -7,9 +7,11 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
   type: "CardImage",
   src: null,
 
-  initialize: function (options) {
+  initialize: function (element, options) {
     options || (options = {});
-
+    options.width = options.width || element.width;
+    options.height = options.height || element.height;
+    this.callSuper("initialize", element, options);
     this.set({
       srcRecto: options.srcRecto,
       srcVerso: options.srcVerso,
@@ -19,15 +21,6 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
       width: options.width || 100,
       alt: options.alt || "Alternative text"
     })
-
-    let imageElement = document.createElement("img")
-    imageElement.src = this.src
-    imageElement.alt = this.alt
-
-    options.width = this.width
-    options.height = this.height
-
-    this.callSuper("initialize", imageElement, options);
   },
 
   onDoubleClick: function (canvas) {
@@ -45,21 +38,29 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
     });
   },
 
-  turn: function () {
+  turn: function (canvas) {
+    console.log("jessaie de tourner la")
     if (this.src === this.srcRecto) {
-      this.src = this.srcVerso;
+      fabric.util.loadImage(this.srcVerso, (img) => {
+        this._element.src = img.src;
+        this.src = img.src
+        canvas.requestRenderAll()
+      });
     } else {
-      this.src = this.srcRecto
+      fabric.util.loadImage(this.srcRecto, (img) => {
+        this._element.src = img.src;
+        this.src = img.src
+        canvas.requestRenderAll()
+      });
     }
-    this.dirty = true;
   },
 
   getMenu: function (canvas) {
     const menu = new Menu([
       new MenuItem("Return", () => {
-        this.turn();
+        this.turn(canvas);
         canvas.requestRenderAll();
-      }),
+      }, require("@/assets/img/turn_card_icon.png")),
       new MenuItem("Rotate 90", () => {
         this.rotate(this.angle + 90);
         canvas.requestRenderAll();
@@ -98,6 +99,7 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
     });
     return intersection;
   },
+
   isDeckIntersection: function (canvas) {
     return this.getDeckIntersection(canvas) !== undefined;
   },
@@ -114,19 +116,5 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
   },
   onMoving: function (canvas) {
     this.getMenu(canvas).openMenu(false);
-  },
-
-  _render: function (ctx) {
-    let imageElement = document.createElement("img")
-    imageElement.src = this.src
-    imageElement.alt = this.alt
-    this.callSuper("_render", ctx)
-    ctx.drawImage(
-      imageElement,
-      -(this.width / 2),
-      -(this.height / 2),
-      this.width,
-      this.height
-    )
   }
 });
