@@ -2,6 +2,7 @@
   <div oncontextmenu="return false;">
     <canvas id="canvas"></canvas>
   </div>
+  <div id="menu"></div>
 </template>
 
 <script>
