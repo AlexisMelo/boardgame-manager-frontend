@@ -11,9 +11,9 @@
         <div class="modal-body">
           <div class="tabButtons">
             <button
-                id="buttonCardTab"
-                class="selected"
-                @click="openTab('CardTab')"
+              id="buttonCardTab"
+              class="selected"
+              @click="openTab('CardTab')"
             >
               Card
             </button>
@@ -32,22 +32,21 @@
           <div id="CardImageTab" class="tab" style="display: none">
             <label>Image face recto :</label>
             <input
-                id="faceRecto"
-                name="faceFile"
-                type="text"
-                @change="updateFace($event, 'recto')"
+              id="faceRecto"
+              name="faceFile"
+              type="text"
+              @change="updateFace($event, 'recto')"
             />
             <label>Image face verso :</label>
             <input
-                id="faceVerso"
-                name="faceFile"
-                type="text"
-                @change="updateFace($event, 'verso')"
+              id="faceVerso"
+              name="faceFile"
+              type="text"
+              @change="updateFace($event, 'verso')"
             />
             <button class="navButton createButton" @click="createImageCard">
               Create the card
             </button>
-
           </div>
         </div>
         <div class="modal-footer">
@@ -111,18 +110,74 @@ export default {
       this.modal.style.display = "block";
     },
     createImageCard() {
+      let leftValue = 10;
       for (let i = 1; i < 29; i++) {
-        console.log(i)
+        console.log(i);
         fabric.util.loadImage(
-            require(`@/assets/img/to_delete_when_server_side_implemented/monopoly/proprietes/p${i}.png`),
-            (imgRecto) => {
-              fabric.util.loadImage(require('@/assets/img/to_delete_when_server_side_implemented/verso.png'), (imgVerso) => {
-                this.$emit("newItem", new CardImage(imgRecto, {
-                  srcRecto: imgRecto.src,
-                  srcVerso: imgVerso.src,
-                }))
-              })
-            }
+          require(`@/assets/img/to_delete_when_server_side_implemented/monopoly/proprietes/p${i}.png`),
+          (imgRecto) => {
+            fabric.util.loadImage(
+              require("@/assets/img/to_delete_when_server_side_implemented/verso.png"),
+              (imgVerso) => {
+                this.$emit(
+                  "newItem",
+                  new CardImage(imgRecto, {
+                    srcRecto: imgRecto.src,
+                    srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 600,
+                  })
+                );
+                leftValue += 40;
+              }
+            );
+          }
+        );
+      }
+      for (let i = 1; i < 4; i++) {
+        console.log(i);
+        fabric.util.loadImage(
+          require(`@/assets/img/to_delete_when_server_side_implemented/monopoly/chance/chance${i}.png`),
+          (imgRecto) => {
+            fabric.util.loadImage(
+              require("@/assets/img/to_delete_when_server_side_implemented/monopoly/chance/chanceVerso.png"),
+              (imgVerso) => {
+                this.$emit(
+                  "newItem",
+                  new CardImage(imgRecto, {
+                    srcRecto: imgRecto.src,
+                    srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 900,
+                  })
+                );
+                leftValue += 40;
+              }
+            );
+          }
+        );
+      }
+      for (let i = 1; i < 4; i++) {
+        console.log(i);
+        fabric.util.loadImage(
+          require(`@/assets/img/to_delete_when_server_side_implemented/monopoly/caisseCommunaute/cc${i}.png`),
+          (imgRecto) => {
+            fabric.util.loadImage(
+              require("@/assets/img/to_delete_when_server_side_implemented/monopoly/caisseCommunaute/ccVerso.png"),
+              (imgVerso) => {
+                this.$emit(
+                  "newItem",
+                  new CardImage(imgRecto, {
+                    srcRecto: imgRecto.src,
+                    srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 900,
+                  })
+                );
+                leftValue += 40;
+              }
+            );
+          }
         );
       }
     },

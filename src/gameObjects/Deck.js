@@ -7,13 +7,6 @@ import { canvasMixin } from "@/mixins/canvasMixin";
 const img = require("../assets/img/to_delete_when_server_side_implemented/defaultDeck.png");
 
 export let Deck = fabric.util.createClass(fabric.Image, {
-  type: "Deck",
-  height: 170,
-  width: 120,
-  displayRectoFace: false,
-  list: [],
-  defaultSrc: img,
-  alt: "deck",
 
   initialize: function (element, options) {
     options || (options = {});
@@ -22,8 +15,13 @@ export let Deck = fabric.util.createClass(fabric.Image, {
     this.callSuper("initialize", element, options)
     this.set({
       id: options.id || uuidv4(),
+      type: "Deck",
       alt: element.alt || "Deck",
       src: element.src || img,
+      defaultSrc: img,
+      displayRectoFace: false,
+      height: 170,
+      width: 120,
       label: options.label || "Unnamed deck",
       list: []
     })
