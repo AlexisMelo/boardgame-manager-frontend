@@ -9,6 +9,7 @@ export let Deck = fabric.util.createClass(fabric.Image, {
   type: "Deck",
   height: 170,
   width: 120,
+  displayRectoFace: false,
   list: [],
   defaultSrc: img,
   alt: "deck",
@@ -41,21 +42,28 @@ export let Deck = fabric.util.createClass(fabric.Image, {
     else {
       icone = "_9"
     }
-    return `http://share.pacary.net/PAO/icone/${icone}.svg`
+    return `http://share.pacary.net/PAO/icone/${icone}.png`
+  },
+
+  turn: function (canvas) {
+    this.displayRectoFace = !this.displayRectoFace
+    canvas.requestRenderAll();
   },
 
   getMenu: function (canvas) {
     const currentList = this.list
     return new Menu([
+      new MenuItem("Return", () => {
+        this.turn();
+        canvas.requestRenderAll();
+      }, "http://share.pacary.net/PAO/icone/flip.svg"),
       new MenuItem(`${currentList.length} card${currentList.length > 1 ? "s" : ""}`, () => {
       }, this.getImageCount()),
       new MenuItem(`Tirer la carte du dessus`, () => {
-        if (currentList.length > 0)
-          canvas.add(this.list.pop())
+        this.getTopCard(canvas)
       }, "http://share.pacary.net/PAO/icone/card-draw-top.svg"),
       new MenuItem(`Tirer la carte du dessous`, () => {
-        if (currentList.length > 0)
-          canvas.add(this.list.shift())
+        this.getBottomCard(canvas)
       }, "http://share.pacary.net/PAO/icone/card-draw-bottom.svg"),
       new MenuItem(`Tirer une carte aléatoire`, () => {
         if (currentList.length > 0) {
@@ -80,6 +88,43 @@ export let Deck = fabric.util.createClass(fabric.Image, {
       }, "http://share.pacary.net/PAO/icone/turnLeft.svg"),
     ]);
   },
+  getTopCard(canvas) {
+    if (this.list.length > 0) {
+      if (this.displayRectoFace)
+        canvas.add(this.list.pop())
+      else
+        canvas.add(this.list.shift())
+    }
+
+  },
+  getBottomCard(canvas) {
+    if (this.list.length > 0) {
+      if (this.displayRectoFace)
+        canvas.add(this.list.shift())
+      else
+        canvas.add(this.list.pop())
+    }
+
+  },
+  getImage() {
+    if (this.list.length === 0) return this.defaultSrc
+    if (this.displayRectoFace) {
+      const card = this.list[this.list.length - 1]
+      if (card.type === "CardImage") {
+        return card.srcRecto
+      } else {
+        return card.defaultSrc
+      }
+    }
+    else {
+      const card = this.list[0]
+      if (card.type === "CardImage") {
+        return card.srcVerso
+      } else {
+        return card.defaultSrc
+      }
+    }
+  },
   newRandomIndex: function () {
     return Math.floor(Math.random() * this.list.length);
   },
@@ -98,7 +143,12 @@ export let Deck = fabric.util.createClass(fabric.Image, {
   },
 
   addToDeck: function (card) {
-    this.list.push(card);
+    if (this.displayRectoFace) {
+      this.list.unshift(card);
+    }
+    else {
+      this.list.push(card);
+    }
   },
 
   toObject: function () {
@@ -109,7 +159,7 @@ export let Deck = fabric.util.createClass(fabric.Image, {
 
   _render: function (ctx) {
     let imageElement = document.createElement("img")
-    imageElement.src = this.src
+    imageElement.src = this.getImage()
     imageElement.alt = this.alt
 
     this.callSuper("_render", ctx);

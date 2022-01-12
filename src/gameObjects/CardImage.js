@@ -59,7 +59,7 @@ export let CardImage = fabric.util.createClass(fabric.Image, {
       new MenuItem("Return", () => {
         this.turn();
         canvas.requestRenderAll();
-      }),
+      }, "http://share.pacary.net/PAO/icone/flip.svg"),
       new MenuItem("Rotate 90", () => {
         this.rotate(this.angle + 90);
         canvas.requestRenderAll();
