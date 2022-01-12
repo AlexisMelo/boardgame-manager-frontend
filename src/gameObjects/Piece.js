@@ -5,26 +5,18 @@ import { v4 as uuidv4 } from "uuid";
 
 export let Piece = fabric.util.createClass(fabric.Image, {
   type: "Piece",
-  src: null,
 
-  initialize: function (options) {
+  initialize: function (element, options) {
     options || (options = {});
-
+    options.width = options.width || element.width;
+    options.height = options.height || element.height;
+    this.callSuper("initialize", element, options);
     this.set({
       src: options.src,
       id: options.id || uuidv4(),
       height: options.height || 70,
       width: options.width || 70
     })
-
-    let imageElement = document.createElement("img")
-    imageElement.src = options.src
-    imageElement.alt = options.alt || "Alternative text"
-
-    options.width = this.width
-    options.height = this.height
-
-    this.callSuper("initialize", imageElement, options);
   },
 
   toObject: function () {
@@ -54,6 +46,7 @@ export let Piece = fabric.util.createClass(fabric.Image, {
   onDeseleced: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
+
   onMoving: function (canvas) {
     this.getMenu(canvas).openMenu(false);
   },
@@ -63,19 +56,5 @@ export let Piece = fabric.util.createClass(fabric.Image, {
       canvas.setActiveObject(this);
       this.getMenu(canvas).openMenu(true, e.pointer.x, e.pointer.y);
     }
-  },
-
-  _render: function (ctx) {
-    let imageElement = document.createElement("img")
-    imageElement.src = this.src
-    imageElement.alt = this.alt
-    this.callSuper("_render", ctx)
-    ctx.drawImage(
-      imageElement,
-      -(this.width / 2),
-      -(this.height / 2),
-      this.width,
-      this.height
-    )
   }
 });

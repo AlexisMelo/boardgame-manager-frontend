@@ -36,16 +36,16 @@
 
 <script>
 import { Piece } from "@/gameObjects/Piece";
+import {fabric} from "fabric";
+
+import modal from "@/assets/js/modal";
 
 export default {
   emits: ["newItem"],
   name: "ButtonCreatePiece",
   data: function () {
     return {
-      modal: null,
-      min: 0,
-      max: 0,
-      faces: [],
+      modal: null
     };
   },
   mounted() {
@@ -59,16 +59,46 @@ export default {
       };
     },
     closeModal() {
-      this.modal.style.display = "none";
+      modal.closeModal(this.modal)
     },
     openModal() {
-      this.modal.style.display = "block";
+      modal.openModal(this.modal)
     },
     createNewPiece() {
-      let piece = new Piece({
-        left: 200,
-      });
-      this.$emit("newItem", piece);
+      let nbhouses_hotels = 15
+      for (let i = 0; i < nbhouses_hotels; i++) {
+        fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"), (img) => {
+          this.$emit("newItem", new Piece(img, {
+            top: 400,
+            left: 200 + 10*i
+          }))
+        })
+        fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/maison.png"), (img) => {
+          this.$emit("newItem", new Piece(img, {
+            top: 500,
+            left: 200 + 10*i
+          }))
+        })
+      }
+
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/brouette.png"), (img) => {
+        this.$emit("newItem", new Piece(img))
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"), (img) => {
+        this.$emit("newItem", new Piece(img, {
+          left: 200
+        }))
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/de_a_coudre.png"), (img) => {
+        this.$emit("newItem", new Piece(img, {
+          left: 300
+        }))
+      })
+      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/chapeau.png"), (img) => {
+        this.$emit("newItem", new Piece(img, {
+          left: 400
+        }))
+      })
     },
   },
 };
