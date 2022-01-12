@@ -81,13 +81,15 @@ export const canvasMixin = {
 
             switch (objectToAdd.type) {
                 case "Card":
-                    this._addToCanvas(new Card(objectToAdd));
+                    this._addToCanvas(canvas, new Card(objectToAdd));
                     break;
                 case "Piece":
-                    this._addToCanvas(new Piece(objectToAdd));
+                    fabric.util.loadImage(objectToAdd.src, (img) => {
+                        this._addToCanvas(canvas, new Piece(img, objectToAdd));
+                    })
                     break;
                 case "DiceNumber":
-                    this._addToCanvas(new DiceNumber(objectToAdd));
+                    this._addToCanvas(canvas, new DiceNumber(objectToAdd));
                     break;
                 case "CardImage":
                     fabric.util.loadImage(objectToAdd.src, (img) => {
@@ -95,7 +97,7 @@ export const canvasMixin = {
                     })
                     break;
                 case "DiceImage":
-                    this._addToCanvas(new DiceImage(objectToAdd));
+                    this._addToCanvas(canvas, new DiceImage(objectToAdd));
                     break;
                 case "Deck":
                     fabric.util.loadImage(objectToAdd.src, (img) => {
