@@ -65,7 +65,7 @@ import { CardImage } from "@/gameObjects/CardImage";
 import { fabric } from "fabric";
 
 export default {
-  emits: ["new"],
+  emits: ["newItem"],
   name: "ButtonCreateCard",
   data: function () {
     return {

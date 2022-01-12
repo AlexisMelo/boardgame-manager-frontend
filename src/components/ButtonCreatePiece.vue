@@ -67,7 +67,7 @@ export default {
     createNewPiece() {
       let nbhouses_hotels = 15
       for (let i = 0; i < nbhouses_hotels; i++) {
-        fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"), (img) => {
+        fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.jpeg"), (img) => {
           this.$emit("newItem", new Piece(img, {
             top: 400,
             left: 200 + 10*i
@@ -84,11 +84,11 @@ export default {
       fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/brouette.png"), (img) => {
         this.$emit("newItem", new Piece(img))
       })
-      fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"), (img) => {
+      /*fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"), (img) => {
         this.$emit("newItem", new Piece(img, {
           left: 200
         }))
-      })
+      })*/
       fabric.util.loadImage(require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/de_a_coudre.png"), (img) => {
         this.$emit("newItem", new Piece(img, {
           left: 300

@@ -12,7 +12,7 @@ export let Piece = fabric.util.createClass(fabric.Image, {
     options.height = options.height || element.height;
     this.callSuper("initialize", element, options);
     this.set({
-      src: options.src,
+      src: element.src,
       id: options.id || uuidv4(),
       height: options.height || 70,
       width: options.width || 70
@@ -21,8 +21,8 @@ export let Piece = fabric.util.createClass(fabric.Image, {
 
   toObject: function () {
     return fabric.util.object.extend(this.callSuper("toObject"), {
-      id: this.id,
-      src: this.src
+      id: this.get("id"),
+      src: this.get("src")
     });
   },
 
