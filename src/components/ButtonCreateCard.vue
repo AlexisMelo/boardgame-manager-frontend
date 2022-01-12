@@ -110,6 +110,7 @@ export default {
       this.modal.style.display = "block";
     },
     createImageCard() {
+      let leftValue = 10;
       for (let i = 1; i < 29; i++) {
         console.log(i);
         fabric.util.loadImage(
@@ -123,8 +124,11 @@ export default {
                   new CardImage(imgRecto, {
                     srcRecto: imgRecto.src,
                     srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 600,
                   })
                 );
+                leftValue += 40;
               }
             );
           }
@@ -143,8 +147,11 @@ export default {
                   new CardImage(imgRecto, {
                     srcRecto: imgRecto.src,
                     srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 900,
                   })
                 );
+                leftValue += 40;
               }
             );
           }
@@ -163,8 +170,11 @@ export default {
                   new CardImage(imgRecto, {
                     srcRecto: imgRecto.src,
                     srcVerso: imgVerso.src,
+                    left: leftValue,
+                    top: 900,
                   })
                 );
+                leftValue += 40;
               }
             );
           }
