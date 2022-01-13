@@ -48,7 +48,7 @@ Parmi toutes les solutions étudiées, l'équipe a choisi d'utiliser Fabric.js c
 - Exemples de choses réalisables avec Fabric.js : http://fabricjs.com/demos/
 - Tutoriel Fabric.js pour bien démarrer : http://fabricjs.com/articles/
 
-Suivant le choix de Fabric.js comme librairie pour le projet, l'équipe a réalisé un travail de recherche sur des 
+Après le choix de Fabric.js comme librairie pour le projet, l'équipe a réalisé un travail de recherche sur des projets existants mêlant Fabric avec des fonctionnalités en réseau. Le résultat de cette phase de recherche est trouvable dans un pdf en [**cliquant ici**](https://github.com/AlexisMelo/boardgame-manager-frontend/blob/main/.github/documents/Recherches%20_%20Fabric%20et%20R%C3%A9seau.pdf). Les applications trouvées sont majoritairement des "Whiteboard" et utilisent aussi socket.io pour gérer la collaboration en temps réel.
 
 ### Node.JS & Express
 
@@ -79,7 +79,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Utilisation de l'application
 
-Un déploiement du logiciel est disponible sur github à l'adresse suivante : https://alexismelo.github.io/boardgame-manager-frontend/#/game/create/Default.
+Un déploiement du logiciel est disponible sur github à l'adresse suivante : https://alexismelo.github.io/boardgame-manager-frontend/#/.
 
 Ce déploiement est mis à jour automatiquement grâce aux Github Actions et Github Pages à chaque commit sur la branche main. Lors de la phase de développement, il est conseillé de lancer le logiciel sur sa propre machine [comme indiqué plus haut](https://github.com/AlexisMelo/boardgame-manager-frontend#installation-et-lancement-de-lapplication). Pour que l'application fonctionne complétement, il faut également [lancer la partie backend du projet](https://github.com/AlexisMelo/boardgame-manager-backend) qui n'est malheureusement pas possible d'héberger avec github pages.  
 
@@ -87,7 +87,7 @@ Lorsqu'on arrive sur la page principale, il est possible de rejoindre une partie
 
 Pour rejoindre une partie, il suffit de renseigner le nom de la partie qui sert d'identifiant et de cliquer sur Join Room, aucune identification n'est requise pour l'instant, et aucune limite de joueurs n'est mise en place non plus. Il n'est pas possible de rejoindre une partie qui n'existe pas.
 
-Pour créer une partie, il faut cliquer sur Create Room. Il n'est pas possible de créer une partie avec un nom qui est déjà pris. Une fois dans l'interface de création de partie, il faut utiliser les boutons à disposition pour placer sur le canvas tous les objets qui seront utiles au jeu. La façon dont ils sont placés dans cette page sera leur vraie position au démarrage de la partie, il ne faut donc pas hésiter à organiser les objets en les répartissant sur tout le plateau comme dans une vraie partie de jeu de société. 
+Pour créer une partie, il faut cliquer sur Create Room. Il n'est pas possible de créer une partie avec un nom qui est déjà pris. Une fois dans l'interface de création de partie, il faut utiliser les boutons à disposition pour placer sur le canvas tous les objets qui seront utiles au jeu. La façon dont ils sont placés dans cette page sera leur vraie position au démarrage de la partie, il ne faut donc pas hésiter à organiser les objets en les répartissant sur tout le plateau comme dans une vraie partie de jeu de société. On peut noter qu'à tout moment, il est possible d'enregistrer la configuration actuelle de la partie au format json en cliquant sur "Save" puis de la réutiliser plus tard en cliquant sur "Upload".
 
 **Remarque** : _A l'heure actuelle, la plupart des boutons disponibles dans l'interface de création de partie donnent des objets hard-codés car nous voulions faciliter la démonstration lors de la dernière séance. Plus d'information dans la partie [pistes d'améliorations](https://github.com/AlexisMelo/boardgame-manager-frontend#pistes-dam%C3%A9lioration)._
 
@@ -95,7 +95,27 @@ Une fois le plateau initialisé, il suffit de cliquer sur le bouton "Démarrer l
 
 **Remarque** : _Il existe un bug où, lorsqu'il y a trop d'éléments sur le plateau, la requête envoyée au serveur est trop grosse et est bloquée, ce qui rend la création de partie impossible. Plus d'information dans la partie [bugs connus](https://github.com/AlexisMelo/boardgame-manager-frontend#bugs-connus)._
 
-## Explications du code
+## Explications du code
+
+_Pour avoir une bonne compréhension de la structure du code du projet il est conseillé de se référer à la documentation officielle de [VueJS Cli](https://v3.vuejs.org/guide/installation.html#cli) qui a permis de générer l'architecture de base._
+
+Le dossier `src` contenant le code source du projet est divisé selon les sous-dossiers suivants : 
+
+- `assets` : Tous les fichiers statiques du projet. On y retrouve les images, des fonctions javascript réutilisées à plusieurs endroits, ainsi que du SCSS aussi utilisé dans plusieurs composants.
+- `components` : Les composants Vue.
+- `gameObjects` : Tous les objets javascript relatifs aux jeux de société. A terme, il devrait contenir l'ensemble des objets identifiés lors de la phase de conception.
+- `mixins` : Les mixins sont des objets javascript réutilisables pouvant être injectés dans les composants Vue. Plus d'infos https://vuejs.org/v2/guide/mixins.html. 
+- `router` : Routage des pages frontend. Plus d'infos https://router.vuejs.org/.
+- `store` : Store VueX global à l'application. Plus d'infos https://vuex.vuejs.org/.
+- `views` : Composants Vue qui sont considérés comme des pages car utilisés dans `router`.
+
+Parmi les views, on retrouve les trois pages que propose l'application pour l'instant : Home.vue contient la page d'accueil, GameCreate.vue la page de création d'une partie et Game.vue la page obtenue en rejoignant une partie existante.
+
+Pour faire fonctionner Fabric avec Vue, on peut voir, dans GameCreate.vue par exemple, qu'il faut créer une balise html canvas. Ensuite, on récupère cet élément une fois la page chargée (évènement vue mounted) et on l'affecte à une variable dans les data du composant pour rendre le canvas accessible depuis l'entierté du composant et se faciliter la tâche. A chaque nouvel objet fabric créé grâce aux boutons d'initialisation de partie, on peut dessiner sur le canvas en faisant `this.canvas.add(monObject)` puis en demandant le rendu du canvas avec la méthode `canvas.requestRenderAll()`.
+
+Un des gros avantages de Fabric est d'avoir tout une gestion évènementielle sur ce qui se passe dans le canvas. On peut voir à plusieurs reprises dans le code des choses du type `this.canvas.on("object:moving", function)`, cela permet d'intercepter chaque déplacement d'objet sur le canvas et y attribuer un callback. En utilisant à bon escient tous les évènements de Fabric, on peut facilement les transmettre à travers les websockets pour re-effectuer les mêmes modifications sur tous les clients connectés à la partie. C'est comme ça que notre logiciel arrive à avoir une communication en temps-réel.
+
+Point important, pour que tous les objets soient synchronisés à travers les clients, il faut impérativement leur attribuer un id et répercuter les changements en fonction de ce même id sur tous les clients. Pour attribuer un identifiant à un objet, on peut s'inspirer du code présent dans les objets du dossier `src/gameObjects`. Il faut définir l'id dans le constructeur en en générant un par défaut si aucun n'est spécifié, et ne pas oublier d'ajouter cette nouvelle propriété dans la fonction `toObject` de l'objet pour qu'il soit bien transmis à travers le réseau !
 
 ## Bugs connus
 
@@ -111,9 +131,11 @@ Une fois le plateau initialisé, il suffit de cliquer sur le bouton "Démarrer l
 
 - Réel système d'authentification (et l'étendre sur qui peut rejoindre les parties, mettre un nombre de joueurs maximal par partie, faire des parties privées, ...)
 
+- Réaliser tout ce qui avait été imaginé dans le cahier des charges, ajouter d'autres types d'objets, améliorer ceux existants, ...
+
 ## Autres liens utiles
 
 ### CSS
 
-Menu stylé 1 : https://codepen.io/VisionLine/pen/xslIu
-Menu stylé 2 : https://codepen.io/barhatsor/pen/YzwxaQV
+- Menu stylé 1 : https://codepen.io/VisionLine/pen/xslIu
+- Menu stylé 2 : https://codepen.io/barhatsor/pen/YzwxaQV
