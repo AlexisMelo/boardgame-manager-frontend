@@ -11,10 +11,8 @@ export let ImageApp = fabric.util.createClass(fabric.Image, {
         options.height = options.height || element.height
         this.callSuper("initialize", element, options)
         this.set({
-            width: options.width || 500,
-            height: options.height || 500,
             id: options.id || uuidv4(),
-            alt: options.alt || "Image for the game",
+            alt: element.alt || "Image for the game",
             src: element.src || img,
             label: options.label || "Image"
         })

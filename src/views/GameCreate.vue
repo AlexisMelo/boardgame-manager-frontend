@@ -134,7 +134,6 @@ export default {
   },
   methods: {
     newItem(item) {
-      console.log(item);
       this.canvas.add(item);
       this.canvas.requestRenderAll();
     },
@@ -234,7 +233,7 @@ export default {
     },
     createNewPiece() {
       let piece = new Piece({
-        src: require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
+        src: require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.jpeg"),
         left: 100,
         top: 100,
       });
@@ -257,7 +256,7 @@ export default {
     createNewDiceImage() {
       let diceImage = new DiceImage({
         listFace: [
-          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.png"),
+          require("@/assets/img/to_delete_when_server_side_implemented/monopoly/hotel.jpeg"),
           require("@/assets/img/to_delete_when_server_side_implemented/ace_spade.png"),
           require("@/assets/img/to_delete_when_server_side_implemented/monopoly/maison.png"),
           require("@/assets/img/to_delete_when_server_side_implemented/monopoly/pions/voiture.png"),
