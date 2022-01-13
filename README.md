@@ -15,7 +15,7 @@ Ce cahier des charges est accessible directement au format pdf en [**cliquant ic
 
 ## Conception
 
-En amont du projet, l'équipe a essayé de représenter sous forme de diagramme l'entiereté des types d'objets pouvant être utilisés lors d'une partie de jeux de société. L'objectif est d'avoir une vue exhaustive des objets à implémenter par la suite et anticiper toutes les interactions possible entre l'utilisateur et le système. 
+En amont du projet, l'équipe a essayé de représenter sous forme de diagramme l'entiereté des types d'objets pouvant être utilisés lors d'une partie de jeux de société. L'objectif est d'avoir une vue exhaustive des objets à implémenter par la suite et anticiper toutes les interactions possibles entre l'utilisateur et le système. 
 
 Le résultat se trouve dans le diagramme suivant : 
 
@@ -35,14 +35,14 @@ Tout ce projet a été développé avec VueJS, un framework frontend Javascript.
 
 ### Socket.io
 
-Point essentiel de l'application, socket.io permet d'échanger des messages avec le serveur backend en temps réel et de façon légère. La bibliothèque fonctionne avec des Websocket et est basé sur un système d'évènements.
+Point essentiel de l'application, socket.io permet d'échanger des messages avec le serveur backend en temps réel et de façon légère. La bibliothèque fonctionne avec des Websocket et fonctionne avec un système d'évènements.
 
 - Documentation officielle de Socket.io : https://socket.io/
 - Documentation sur les websockets : https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
 
 ### Fabric.js
 
-Parmi toutes les solutions étudiées, l'équipe a choisi d'utiliser Fabric.js comme bibliothèque Javascript pour gérer la manipulation d'objets par l'utilisateur. La librarie se base sur le canvas html5 et propose des fonctionnalités de base permettant de : déplacer, sélectionner, ajouter, superposer ou encore tourner des objets dessinés sur le canvas. De plus, la bibliothèque a une documentation détaillée et propose des moyens pour sous-classer les classes de base proposés. 
+Parmi toutes les solutions étudiées, l'équipe a choisi d'utiliser Fabric.js comme bibliothèque Javascript pour gérer la manipulation d'objets par l'utilisateur. La librarie se base sur le canvas html5 et propose des fonctionnalités de base permettant de : déplacer, sélectionner, ajouter, superposer ou encore tourner des objets dessinés sur le canvas. De plus, la bibliothèque a une documentation détaillée et propose des moyens pour sous-classer les classes de base proposées. 
 
 - Documentation officielle de Fabric.js : http://fabricjs.com/docs/
 - Exemples de choses réalisables avec Fabric.js : http://fabricjs.com/demos/
@@ -91,7 +91,7 @@ Pour créer une partie, il faut cliquer sur Create Room. Il n'est pas possible d
 
 **Remarque** : _A l'heure actuelle, la plupart des boutons disponibles dans l'interface de création de partie donnent des objets hard-codés car nous voulions faciliter la démonstration lors de la dernière séance. Plus d'information dans la partie [pistes d'améliorations](https://github.com/AlexisMelo/boardgame-manager-frontend#pistes-dam%C3%A9lioration)._
 
-Une fois le plateau initialisé, il suffit de cliquer sur le bouton "Démarrer la partie" pour quitter l'interface de création et arriver dans la vraie partie. Une fois dans la vraie partie, les autres joueurs peuvent la rejoindre depuis l'écran d'accueil en renseignant son identifiant, et le jeu est immédiatement jouable. Sur cet écran on peut voir le plateau, un encadré affichant ce qui se passe en temps réel dans la partie, et un indicateur en bas à droite de l'écran indiquant les joueurs connectés et l'état de la socket qui tourne au rouge lorsque le serveur n'est plus accessible.
+Une fois le plateau initialisé, il suffit de cliquer sur le bouton "Démarrer la partie" pour quitter l'interface de création et arriver dans la vraie partie. Une fois dans la vraie partie, les autres joueurs peuvent la rejoindre depuis l'écran d'accueil en renseignant son identifiant, et le jeu est immédiatement jouable. Sur cet écran on peut voir le plateau, un encadré affichant ce qui se passe en temps réel dans la partie, et un indicateur en bas à droite de l'écran. Cet indicateur renseigne sur les joueurs connectés et l'état de la socket qui tourne au rouge lorsque le serveur est inaccessible.
 
 **Remarque** : _Il existe un bug où, lorsqu'il y a trop d'éléments sur le plateau, la requête envoyée au serveur est trop grosse et est bloquée, ce qui rend la création de partie impossible. Plus d'information dans la partie [bugs connus](https://github.com/AlexisMelo/boardgame-manager-frontend#bugs-connus)._
 
@@ -111,7 +111,7 @@ Le dossier `src` contenant le code source du projet est divisé selon les sous-d
 
 Parmi les views, on retrouve les trois pages que propose l'application pour l'instant : Home.vue contient la page d'accueil, GameCreate.vue la page de création d'une partie et Game.vue la page obtenue en rejoignant une partie existante.
 
-Pour faire fonctionner Fabric avec Vue, on peut voir, dans GameCreate.vue par exemple, qu'il faut créer une balise html canvas. Ensuite, on récupère cet élément une fois la page chargée (évènement vue mounted) et on l'affecte à une variable dans les data du composant pour rendre le canvas accessible depuis l'entierté du composant et se faciliter la tâche. A chaque nouvel objet fabric créé grâce aux boutons d'initialisation de partie, on peut dessiner sur le canvas en faisant `this.canvas.add(monObject)` puis en demandant le rendu du canvas avec la méthode `canvas.requestRenderAll()`.
+Pour faire fonctionner Fabric avec Vue, on peut voir, dans GameCreate.vue par exemple, qu'il faut créer une balise html canvas. Ensuite, on récupère cet élément une fois la page chargée (évènement vue mounted) et on l'affecte à une variable dans les data du composant pour rendre le canvas accessible depuis l'entierté de celui-ci et se faciliter la tâche. A chaque nouvel objet fabric créé grâce aux boutons d'initialisation de partie, on peut dessiner sur le canvas en faisant `this.canvas.add(monObject)` puis en demandant le rendu du canvas avec la méthode `canvas.requestRenderAll()`.
 
 Un des gros avantages de Fabric est d'avoir tout une gestion évènementielle sur ce qui se passe dans le canvas. On peut voir à plusieurs reprises dans le code des choses du type `this.canvas.on("object:moving", function)`, cela permet d'intercepter chaque déplacement d'objet sur le canvas et y attribuer un callback. En utilisant à bon escient tous les évènements de Fabric, on peut facilement les transmettre à travers les websockets pour re-effectuer les mêmes modifications sur tous les clients connectés à la partie. C'est comme ça que notre logiciel arrive à avoir une communication en temps-réel.
 
