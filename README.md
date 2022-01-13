@@ -11,7 +11,7 @@ Ce projet a été réalisé lors d'un PAO (Projet d'approfondissement et d'ouver
 ## Cahier des charges de base
 
 Avant le début du projet, nous avions établi un cahier des charges listant les objectifs du projet et des pistes de fonctionnalités à implémenter.
-Ce cahier des charges est accessible directement au format pdf en [**cliquant ici**]().
+Ce cahier des charges est accessible directement au format pdf en [**cliquant ici**](https://github.com/AlexisMelo/boardgame-manager-frontend/blob/main/.github/documents/Boardgame_manager_CDC.pdf).
 
 ## Conception
 
@@ -21,7 +21,7 @@ Le résultat se trouve dans le diagramme suivant :
 
 ![Game_elements_final](https://user-images.githubusercontent.com/24303733/149376978-e6788d8a-aa83-401c-bc86-0502d5098096.png)
 
-D'autres diagrammes complémentaires ayant mené à ce résultat sont aussi disponibles en [**cliquant ici**]() et témoignent du travail de réflexion mené par l'équipe. De plus, ils peuvent donner des pistes d'amélioration pour le diagramme final introduit précédemment de part leur nombre et la diversité des points de vue représentés qui ont pu être bridés lors de la mise en commun.
+D'autres diagrammes complémentaires ayant mené à ce résultat sont aussi disponibles en [**cliquant ici**](https://github.com/AlexisMelo/boardgame-manager-frontend/tree/main/.github/documents) et témoignent du travail de réflexion mené par l'équipe. De plus, ils peuvent donner des pistes d'amélioration pour le diagramme final introduit précédemment de part leur nombre et la diversité des points de vue représentés qui ont pu être bridés lors de la mise en commun.
 
 ## Technologies utilisées
 
@@ -99,11 +99,17 @@ Une fois le plateau initialisé, il suffit de cliquer sur le bouton "Démarrer l
 
 ## Bugs connus
 
+- Lorsqu'il y a trop d'objets instanciés dans le canvas de la page "Create game", la requête au moment de créer la partie est trop grosse pour être traitée par le serveur, ce qui lance systématiquement une erreur (Request too big). Une piste de résolution est d'instancier les objets normalement, puis cliquer sur "Save objects" pour obtenir le Json et regarder à l'intérieur ce qui pose problème. Généralement, c'est de la faute des images une fois transformées en url : certaines donnent des url normaux (www.domaine.truc/bidule/image.png) tandis que d'autres sont directement encodées en base 64 et prennent une place colossale dans le fichier. On pourrait imaginer corriger ce bug pour avoir un encodage systématique sous forme d'url, mais on pourrait aussi diviser les requêtes si elles sont trop grosses, ou bien trouver un moyen d'augmenter la taille des requêtes autorisées côté serveur.
+
 ## Pistes d'amélioration
 
-- Fusionner le backend et le frontend dans une seule application, un tutoriel exemple est disponible à l'adresse suivante : https://vegibit.com/vue-js-express-tutorial/
+- La plus grande amélioration possible serait de trouver un moyen pour stocker toutes les images de l'utilisateur sur serveur. En effet, pour l'instant, l'utilisateur ne peut pas enregistrer ses nouvelles images importées car elles ne sont pas stockées en backend. Plusieurs facteurs rendent cette partie compliquée car il y a beaucoup d'images en général dans un jeu de société, donc les stocker coté serveur prendrait beaucoup de place. Il faudrait trouver un moyen pour rendre les images réutilisables entre les utilisateurs ou bien les compresser.
+ 
+- Actuellement, lorsqu'on souhaite créer les objets dans l'interface "Create game", les objets sont hard codés et instanciés avec des images issues du projet frontend peu importe l'input de l'utilisateur. Une première étape serait de supprimer ces mesures qui avaient été mises en place pour une démo et remettre le fonctionnement par défaut. 
 
-- Système d'authentification (répercussion sur qui peut rejoindre les parties)
+- Fusionner le backend et le frontend dans une seule application, un tutoriel exemple est disponible à l'adresse suivante : https://vegibit.com/vue-js-express-tutorial/.
+
+- Réel système d'authentification (et l'étendre sur qui peut rejoindre les parties, mettre un nombre de joueurs maximal par partie, faire des parties privées, ...)
 
 ## Autres liens utiles
 
